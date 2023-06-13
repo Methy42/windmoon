@@ -1,0 +1,4 @@
+openssl
+nlohmann/json
+
+添加环境变量OPENSSL_ROOT_DIR，指向openssl的安装目录

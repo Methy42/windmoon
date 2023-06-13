@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "RUN",
+            "type": "cppdbg",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/build",
+            "program": "${workspaceFolder}/build/windmoon",
+            "preLaunchTask": "make"
+        },
+        {
+            "name": "GDB",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/windmoon",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}/build",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "preLaunchTask": "make"
+        }
+    ]
+}
