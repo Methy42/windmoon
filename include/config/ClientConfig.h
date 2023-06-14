@@ -15,8 +15,6 @@ private:
 
     std::string server_ip;
     int server_port;
-    std::string client_jks_file_path;
-    std::string client_jks_password;
     int server_heartbeat_interval;
 
     int loadConfig();
@@ -31,14 +29,10 @@ public:
 
     std::string getServerIp();
     int getServerPort();
-    std::string getClientJksFilePath();
-    std::string getClientJksPassword();
     int getServerHeartbeatInterval();
 
     int setServerIp(std::string server_ip);
     int setServerPort(int server_port);
-    int setClientJksFilePath(std::string client_jks_file_path);
-    int setClientJksPassword(std::string client_jks_password);
     int setServerHeartbeatInterval(int server_heartbeat_interval);
 };
 

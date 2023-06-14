@@ -1,39 +1,89 @@
 #include "utils/JKSCryption.h"
 
-JKSCryption* JKSCryption::getInstance()
+int password_cb(char *buf, int size, int rwflag, void *user_data)
 {
-    static JKSCryption instance;
-    return &instance;
-}
+    JKSCryptionOptions *options = (JKSCryptionOptions *)user_data;
 
-std::string JKSCryption::encrypt(const unsigned char *data)
+    if (options->pem_password != NULL)
+    {
+        int len = std::strlen(options->pem_password);
+        if (len > size)
+            len = size;
+        std::memcpy(buf, options->pem_password, len);
+        return len;
+    }
+    return 0;
+};
+
+JKSCryption::JKSCryption(JKSCryptionOptions *options)
 {
-    int data_len = strlen((const char*)data);
-    int max_result_len = EVP_CIPHER_CTX_block_size(ctx) + data_len;
-    std::string result(max_result_len, '\0');
-    int result_len = 0;
+    std::cout << "JKSCryption::JKSCryption" << std::endl;
 
-    EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, NULL, NULL);
-    EVP_EncryptUpdate(ctx, reinterpret_cast<unsigned char*>(&result[0]), &result_len, data, data_len);
-    EVP_EncryptFinal_ex(ctx, reinterpret_cast<unsigned char*>(&result[result_len]), &result_len);
+    // Initialize the OpenSSL library
+    OpenSSL_add_all_algorithms();
+    ERR_load_crypto_strings();
 
-    result.resize(result_len);
+    ctx = SSL_CTX_new(TLS_method());
+    if (ctx == NULL)
+    {
+        std::cerr << "Failed to create SSL context." << std::endl;
+    }
 
-    return result;
-}
+    // Load the certificate and private key from the disk
+    BIO *certificate_bio = BIO_new_mem_buf(options->certificate_data, -1);
+    if (certificate_bio == NULL)
+    {
+        std::cerr << "Failed to create BIO." << std::endl;
+    }
+    cert = PEM_read_bio_X509(certificate_bio, NULL, password_cb, options);
+    BIO_free(certificate_bio);
 
-std::string JKSCryption::decrypt(const char* data)
+    BIO *private_key_bio = BIO_new_mem_buf(options->private_key_data, -1);
+    if (private_key_bio == NULL)
+    {
+        std::cerr << "Failed to create BIO." << std::endl;
+    }
+    pkey = PEM_read_bio_PrivateKey(private_key_bio, NULL, password_cb, options);
+    BIO_free(private_key_bio);
+
+    if (cert == NULL || pkey == NULL)
+    {
+        std::cerr << "Failed to read certificate or private key." << std::endl;
+    }
+
+    SSL_CTX_use_certificate(ctx, cert);
+    SSL_CTX_use_PrivateKey(ctx, pkey);
+
+    // Check if the client certificate and private-key matches
+    if (!SSL_CTX_check_private_key(ctx))
+    {
+        std::cerr << "Private key does not match the certificate public key" << std::endl;
+    }
+
+    std::cout << "JKSCryption::JKSCryption end" << std::endl;
+};
+
+JKSCryption::~JKSCryption()
 {
-    int data_len = strlen(data);
-    int max_result_len = data_len;
-    std::string result(max_result_len, '\0');
-    int result_len = 0;
+    // Clean up the OpenSSL library
+    EVP_cleanup();
+    ERR_free_strings();
+    SSL_CTX_free(ctx);
+    EVP_PKEY_free(pkey);
+    X509_free(cert);
+};
 
-    EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, NULL, NULL);
-    EVP_DecryptUpdate(ctx, reinterpret_cast<unsigned char*>(&result[0]), &result_len, reinterpret_cast<const unsigned char*>(data), data_len);
-    EVP_DecryptFinal_ex(ctx, reinterpret_cast<unsigned char*>(&result[result_len]), &result_len);
+X509 *JKSCryption::getCert()
+{
+    return cert;
+};
 
-    result.resize(result_len);
+EVP_PKEY *JKSCryption::getPkey()
+{
+    return pkey;
+};
 
-    return result;
-}
+SSL_CTX *JKSCryption::getCtx()
+{
+    return ctx;
+};
