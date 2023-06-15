@@ -3,6 +3,7 @@ project(windmoon)
 
 # 设置CPP版本
 set(CMAKE_CXX_STANDARD 11)
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
 
 set(OPENSSL_ROOT_DIR $ENV{OPENSSL_ROOT_DIR})
 find_package(OpenSSL REQUIRED)

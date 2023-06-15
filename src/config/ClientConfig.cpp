@@ -25,6 +25,7 @@ int ClientConfig::loadConfig()
     server_ip = j["server_ip"].get<std::string>();
     server_port = j["server_port"].get<int>();
     server_heartbeat_interval = j["server_heartbeat_interval"].get<int>();
+    server_connect_interval = j["server_connect_interval"].get<int>();
 
     return 0;
 }
@@ -35,6 +36,7 @@ int ClientConfig::saveConfig()
     j["server_ip"] = server_ip;
     j["server_port"] = server_port;
     j["server_heartbeat_interval"] = server_heartbeat_interval;
+    j["server_connect_interval"] = server_connect_interval;
 
     std::ofstream o("config/client.json");
     o << std::setw(4) << j << std::endl;
@@ -57,6 +59,11 @@ int ClientConfig::getServerHeartbeatInterval()
     return server_heartbeat_interval;
 }
 
+int ClientConfig::getServerConnectInterval()
+{
+    return server_connect_interval;
+}
+
 int ClientConfig::setServerIp(std::string server_ip)
 {
     this->server_ip = server_ip;
@@ -74,6 +81,13 @@ int ClientConfig::setServerPort(int server_port)
 int ClientConfig::setServerHeartbeatInterval(int server_heartbeat_interval)
 {
     this->server_heartbeat_interval = server_heartbeat_interval;
+    saveConfig();
+    return 0;
+}
+
+int ClientConfig::setServerConnectInterval(int server_connect_interval)
+{
+    this->server_connect_interval = server_connect_interval;
     saveConfig();
     return 0;
 }

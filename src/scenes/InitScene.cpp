@@ -7,7 +7,10 @@ InitScene::InitScene(/* args */)
 int InitScene::start()
 {
     ServerConnect *connect = ServerConnect::getInstance();
-    connect->run();
+    if (connect->run() != 1)
+    {
+        std::cerr << "Failed to connect to server." << std::endl;
+    }
 
     return 0;
 }

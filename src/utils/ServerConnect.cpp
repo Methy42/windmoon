@@ -8,36 +8,53 @@ ServerConnect* ServerConnect::getInstance()
 
 int ServerConnect::run()
 {
-    ClientConfig* config = ClientConfig::getInstance();
-
-    std::string server_ip = config->getServerIp();
-    char* ip_str = const_cast<char*>(server_ip.c_str());
-
-    tls_connect = new TLSConnect(new TLSConnectOptions {
-        new TCPConnectOptions {
-            ip_str,
-            config->getServerPort()
-        },
-        new JKSCryptionOptions {
-            certificate_data,
-            private_key_data,
-            pem_password
-        }
-    });
-
-    if (tls_connect->getStatus() == -1)
+    std::thread connect_thread([this]()
     {
-        std::cerr << "Failed to connect to server." << std::endl;
-        return -1;
-    }
+        while (status != 1)
+        {
+            ClientConfig *config = ClientConfig::getInstance();
+            int now_time = time(NULL);
 
-    status = 1;
+            if (now_time - connect_time > config->getServerConnectInterval())
+            {
+                connect_time = time(NULL);
+                ClientConfig* config = ClientConfig::getInstance();
 
-    // 接收数据
-    receive_thread = std::thread(&ServerConnect::receive, this);
+                std::string server_ip = config->getServerIp();
+                char* ip_str = const_cast<char*>(server_ip.c_str());
 
-    // 开始心跳
-    heartbeat();
+                tls_connect = new TLSConnect(new TLSConnectOptions {
+                    new TCPConnectOptions {
+                        ip_str,
+                        config->getServerPort()
+                    },
+                    new JKSCryptionOptions {
+                        certificate_data,
+                        private_key_data,
+                        pem_password
+                    }
+                });
+
+                if (tls_connect->getStatus() != 1)
+                {
+                    std::cerr << "Failed to connect to server." << std::endl;
+                } else {
+                    std::cout << "Connected to server." << std::endl;
+
+                    status = 1;
+
+                    // 接收数据
+                    receive_thread = std::thread(&ServerConnect::receive, this);
+
+                    // 开始心跳
+                    std::thread heartbeat_thread(&ServerConnect::heartbeat, this);
+                    heartbeat_thread.detach();
+                }
+            }
+        }
+        
+    });
+    connect_thread.detach();
 
     return 0;
 };
@@ -112,8 +129,7 @@ int ServerConnect::closeConnect()
 */
 int ServerConnect::heartbeat()
 {
-    std::cout << "start heartbeat" << std::endl;
-    if (status == 1)
+    while (status == 1)
     {
         ClientConfig* config = ClientConfig::getInstance();
         int now_time = time(NULL);
@@ -132,10 +148,6 @@ int ServerConnect::heartbeat()
 
             sendMessage(j.dump().c_str());
         }
-
-        // 等待config->getServerHeartbeatInterval()秒后再次执行
-        std::this_thread::sleep_for(std::chrono::seconds(config->getServerHeartbeatInterval()));
-        heartbeat();
     }
     return 0;
 };

@@ -31,6 +31,7 @@ private:
     ~ServerConnect() {};
     TLSConnect* tls_connect;
     int status = 0;
+    int connect_time = 0;
     int laster_send_time = 0;
     std::vector<ServerConnectEvent*> eventList;
     std::thread receive_thread;

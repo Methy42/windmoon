@@ -16,6 +16,7 @@ private:
     std::string server_ip;
     int server_port;
     int server_heartbeat_interval;
+    int server_connect_interval;
 
     int loadConfig();
     int saveConfig();
@@ -30,10 +31,12 @@ public:
     std::string getServerIp();
     int getServerPort();
     int getServerHeartbeatInterval();
+    int getServerConnectInterval();
 
     int setServerIp(std::string server_ip);
     int setServerPort(int server_port);
     int setServerHeartbeatInterval(int server_heartbeat_interval);
+    int setServerConnectInterval(int server_connect_interval);
 };
 
 #endif // CLIENT_CONFIG_H

@@ -5,6 +5,8 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <fcntl.h>
+#include <thread>
 
 struct TCPConnectOptions
 {
@@ -21,7 +23,7 @@ public:
     int getStatus();
 private:
     int sockfd;
-    int status;
+    int status = -1;
 };
 
 #endif // TCP_CONNECT_H

@@ -3,7 +3,8 @@
 TLSConnect::TLSConnect(TLSConnectOptions *options)
 {
     tcp_connect = new TCPConnect(options->tcp_options);
-    if (tcp_connect->getStatus() == -1) {
+    if (tcp_connect->getStatus() != 1) {
+        std::cerr << "Failed to connect to server." << std::endl;
         status = -1;
         return;
     }
