@@ -6,6 +6,15 @@
 #include <cstring>
 #include <nlohmann/json.hpp>
 
+struct ClientConfigContext
+{
+    char* server_ip; // Server IP
+    int server_port; // Server port
+    int server_heartbeat_interval; // Heartbeat interval
+    int server_reconnect_interval; // Reconnect interval
+    int connection_blocking_waiting_time; // Connection blocking waiting time
+};
+
 class ClientConfig
 {
 private:
@@ -13,10 +22,7 @@ private:
     ClientConfig();
     ~ClientConfig();
 
-    std::string server_ip;
-    int server_port;
-    int server_heartbeat_interval;
-    int server_connect_interval;
+    ClientConfigContext* context;
 
     int loadConfig();
     int saveConfig();
@@ -28,15 +34,9 @@ public:
     ClientConfig(const ClientConfig&) = delete;
     ClientConfig& operator=(const ClientConfig&) = delete;
 
-    std::string getServerIp();
-    int getServerPort();
-    int getServerHeartbeatInterval();
-    int getServerConnectInterval();
+    ClientConfigContext* getContext();
 
-    int setServerIp(std::string server_ip);
-    int setServerPort(int server_port);
-    int setServerHeartbeatInterval(int server_heartbeat_interval);
-    int setServerConnectInterval(int server_connect_interval);
+    int setContext(ClientConfigContext* context);
 };
 
 #endif // CLIENT_CONFIG_H

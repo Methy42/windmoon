@@ -76,6 +76,9 @@
         "ranges": "cpp",
         "stack": "cpp",
         "valarray": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "coroutine": "cpp",
+        "future": "cpp",
+        "thread": "cpp"
     }
 }

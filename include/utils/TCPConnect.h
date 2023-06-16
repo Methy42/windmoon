@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <thread>
+#include "utils/EventTarget.h"
 
 struct TCPConnectOptions
 {
@@ -20,10 +21,9 @@ public:
     TCPConnect(TCPConnectOptions *options);
     ~TCPConnect();
     int getSockfd();
-    int getStatus();
+    EventTarget* event_target;
 private:
     int sockfd;
-    int status = -1;
 };
 
 #endif // TCP_CONNECT_H

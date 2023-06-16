@@ -2,12 +2,15 @@
 
 TCPConnect::TCPConnect(TCPConnectOptions *options)
 {
+    event_target = new EventTarget();
+
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
         std::cerr << "Failed to create socket." << std::endl;
-        status = -1;
+        event_target->dispatchEvent("error", new EventCallbackParam { "SocketCreationFailure", "Failed to create socket." });
     } else {
-        status = 0;
+        std::cout << "Socket created." << std::endl;
+        event_target->dispatchEvent("socket_created", new EventCallbackParam { "SocketCreationSuccess", "Socket created." });
     }
 
     fcntl(sockfd, F_SETFL, O_NONBLOCK);
@@ -17,7 +20,6 @@ TCPConnect::TCPConnect(TCPConnectOptions *options)
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(options->server_port);  // 设置端口号为1234
     inet_pton(AF_INET, options->server_ip, &server_addr.sin_addr);
-
     std::cout << "start tcp connect" << std::endl;
     std::cout << "server_ip: " << options->server_ip << std::endl;
     std::cout << "server_port: " << options->server_port << std::endl;
@@ -39,18 +41,18 @@ TCPConnect::TCPConnect(TCPConnectOptions *options)
 
         int ret = select(sockfd + 1, NULL, &writefds, NULL, &timeout);
         if (ret <= 0) {
-            std::cerr << "Failed to connect to server." << std::endl;
-            status = -1;
+            std::cerr << "Failed to create TCP connect." << std::endl;
+            event_target->dispatchEvent("error", new EventCallbackParam { "SocketConnectFailure", "Failed to create TCP connect." });
         } else {
             int error = -1;
             socklen_t len = sizeof(error);
             getsockopt(sockfd, SOL_SOCKET, SO_ERROR, &error, &len);
             if (error != 0) {
-                std::cerr << "Failed to connect to server." << std::endl;
-                status = -1;
+                std::cerr << "Failed to get sockopt." << std::endl;
+                event_target->dispatchEvent("error", new EventCallbackParam { "SocketConnectFailure", "Failed to get sockopt." });
             } else {
                 std::cout << "Connected to server." << std::endl;
-                status = 1;
+                event_target->dispatchEvent("connected", new EventCallbackParam { "SocketConnectSuccess", "Connected to server." });
             }
         }
     });
@@ -59,15 +61,11 @@ TCPConnect::TCPConnect(TCPConnectOptions *options)
 
 TCPConnect::~TCPConnect()
 {
+    delete event_target;
     close(sockfd);
 }
 
 int TCPConnect::getSockfd()
 {
     return sockfd;
-}
-
-int TCPConnect::getStatus()
-{
-    return status;
 }

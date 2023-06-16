@@ -1,5 +1,5 @@
-#ifndef JKS_CRYPTION_H
-#define JKS_CRYPTION_H
+#ifndef PEM_CRYPTION_H
+#define PEM_CRYPTION_H
 
 #include <iostream>
 #include <cstring>
@@ -11,15 +11,16 @@
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
 #include <openssl/pkcs12.h>
+#include "utils/EventTarget.h"
 
-struct JKSCryptionOptions
+struct PEMCryptionOptions
 {
     const char *certificate_data;
     const char *private_key_data;
     const char *pem_password;
 };
 
-class JKSCryption
+class PEMCryption
 {
 private:
     X509* cert;
@@ -27,12 +28,14 @@ private:
     SSL_CTX* ctx;
 
 public:
-    JKSCryption(JKSCryptionOptions *options);
-    ~JKSCryption();
+    PEMCryption(PEMCryptionOptions *options);
+    ~PEMCryption();
+
+    EventTarget* event_target;
 
     X509* getCert();
     EVP_PKEY* getPkey();
     SSL_CTX* getCtx();
 };
 
-#endif /* JKS_CRYPTION_H */
+#endif /* PEM_CRYPTION_H */

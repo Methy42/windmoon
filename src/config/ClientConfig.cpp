@@ -22,10 +22,15 @@ int ClientConfig::loadConfig()
     nlohmann::json j;
     i >> j;
 
-    server_ip = j["server_ip"].get<std::string>();
-    server_port = j["server_port"].get<int>();
-    server_heartbeat_interval = j["server_heartbeat_interval"].get<int>();
-    server_connect_interval = j["server_connect_interval"].get<int>();
+    context = new ClientConfigContext();
+
+    std::string server_ip = j["server_ip"].get<std::string>();
+    context->server_ip = new char[server_ip.length() + 1];
+    strcpy(context->server_ip, server_ip.c_str());
+    context->server_port = j["server_port"].get<int>();
+    context->server_heartbeat_interval = j["server_heartbeat_interval"].get<int>();
+    context->server_reconnect_interval = j["server_reconnect_interval"].get<int>();
+    context->connection_blocking_waiting_time = j["connection_blocking_waiting_time"].get<int>();
 
     return 0;
 }
@@ -33,10 +38,11 @@ int ClientConfig::loadConfig()
 int ClientConfig::saveConfig()
 {
     nlohmann::json j;
-    j["server_ip"] = server_ip;
-    j["server_port"] = server_port;
-    j["server_heartbeat_interval"] = server_heartbeat_interval;
-    j["server_connect_interval"] = server_connect_interval;
+    j["server_ip"] = context->server_ip;
+    j["server_port"] = context->server_port;
+    j["server_heartbeat_interval"] = context->server_heartbeat_interval;
+    j["server_reconnect_interval"] = context->server_reconnect_interval;
+    j["connection_blocking_waiting_time"] = context->connection_blocking_waiting_time;
 
     std::ofstream o("config/client.json");
     o << std::setw(4) << j << std::endl;
@@ -44,50 +50,14 @@ int ClientConfig::saveConfig()
     return 0;
 }
 
-std::string ClientConfig::getServerIp()
+ClientConfigContext* ClientConfig::getContext()
 {
-    return server_ip;
+    return context;
 }
 
-int ClientConfig::getServerPort()
+int ClientConfig::setContext(ClientConfigContext* context)
 {
-    return server_port;
-}
-
-int ClientConfig::getServerHeartbeatInterval()
-{
-    return server_heartbeat_interval;
-}
-
-int ClientConfig::getServerConnectInterval()
-{
-    return server_connect_interval;
-}
-
-int ClientConfig::setServerIp(std::string server_ip)
-{
-    this->server_ip = server_ip;
-    saveConfig();
-    return 0;
-}
-
-int ClientConfig::setServerPort(int server_port)
-{
-    this->server_port = server_port;
-    saveConfig();
-    return 0;
-}
-
-int ClientConfig::setServerHeartbeatInterval(int server_heartbeat_interval)
-{
-    this->server_heartbeat_interval = server_heartbeat_interval;
-    saveConfig();
-    return 0;
-}
-
-int ClientConfig::setServerConnectInterval(int server_connect_interval)
-{
-    this->server_connect_interval = server_connect_interval;
+    this->context = context;
     saveConfig();
     return 0;
 }

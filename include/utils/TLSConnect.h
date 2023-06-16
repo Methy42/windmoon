@@ -1,13 +1,15 @@
 #ifndef TLS_CONNECT_H
 #define TLS_CONNECT_H
 
-#include "utils/JKSCryption.h"
+#include <future>
+#include "utils/PEMCryption.h"
 #include "utils/TCPConnect.h"
+#include "utils/EventTarget.h"
 
 struct TLSConnectOptions
 {
     TCPConnectOptions* tcp_options;
-    JKSCryptionOptions* jks_options;
+    PEMCryptionOptions* pem_options;
 };
 
 class TLSConnect
@@ -16,13 +18,19 @@ public:
     TLSConnect(TLSConnectOptions *options);
     ~TLSConnect();
 
+    EventTarget* event_target;
     SSL* getSSL();
-    int getStatus();
+    void receive();
+    int send(const char* message);
 private:
+    TLSConnectOptions *options;
     SSL* ssl;
-    int status;
     TCPConnect* tcp_connect;
-    JKSCryption* jks_cryption;
+    PEMCryption* pem_cryption;
+    int status = 0;
+
+    void initTCPConnect();
+    void initPEMCryption();
 };
 
 #endif // TLS_CONNECT_H
