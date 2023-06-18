@@ -14,6 +14,7 @@ message(STATUS "OPENSSL_LIBRARIES: ${OPENSSL_LIBRARIES}")
 include_directories(
 	${PROJECT_SOURCE_DIR}/include
 	${PROJECT_SOURCE_DIR}/resources
+	${PROJECT_SOURCE_DIR}/lib
 	$ENV{OPENSSL_ROOT_DIR}/include
 	$ENV{CMAKE_INCLUDE_PATH}
 )
@@ -35,9 +36,13 @@ include_directories(${LIBUV_INCLUDE_DIRS})
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 # 链接库
-target_link_libraries(${PROJECT_NAME} ${OPENSSL_LIBRARIES})
 if(APPLE)
-	target_link_libraries(${PROJECT_NAME} ${CoreFoundation_LIBRARY})
+	target_link_libraries(${PROJECT_NAME}
+		${OPENSSL_LIBRARIES}
+		${CoreFoundation_LIBRARY}
+	)
+else()
+	target_link_libraries(${PROJECT_NAME} ${OPENSSL_LIBRARIES})
 endif()
 
 
