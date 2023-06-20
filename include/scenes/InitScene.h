@@ -3,8 +3,9 @@
 
 #include <thread>
 #include "utils/ServerConnect.h"
+#include "YouHuang/Scene.h"
 
-class InitScene
+class InitScene: Scene
 {
 private:
     /* data */
