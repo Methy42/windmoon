@@ -13,6 +13,7 @@ struct ClientConfigContext
     int server_heartbeat_interval; // Heartbeat interval
     int server_reconnect_interval; // Reconnect interval
     int connection_blocking_waiting_time; // Connection blocking waiting time
+    int server_receive_interval; // Server receive interval
 };
 
 class ClientConfig

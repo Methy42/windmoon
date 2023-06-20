@@ -3,5 +3,6 @@
     "server_port": 1887,
     "server_heartbeat_interval": 4,
     "server_reconnect_interval": 2,
-    "connection_blocking_waiting_time": 5
+    "connection_blocking_waiting_time": 5,
+    "server_receive_interval": 1
 }

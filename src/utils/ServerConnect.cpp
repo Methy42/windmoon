@@ -12,6 +12,7 @@ int ServerConnect::run()
 
     tls_connect->event_target->addEventListener("error", [this](void *data)
     {
+        std::cout << "TLS connect has ERROR!" << std::endl;
         onTLSConnectionInterruption(data);
     });
 
@@ -22,6 +23,12 @@ int ServerConnect::run()
         connect_time = time(NULL);
         std::thread heartbeat_thread(&ServerConnect::heartbeat, this);
         heartbeat_thread.detach();
+    });
+
+    tls_connect->event_target->addEventListener("disconnect", [this](void *data)
+    {
+        std::cout << "TLS connect has DISCONNECTED!" << std::endl;
+        status = 0;
     });
 
     return 0;
@@ -40,7 +47,8 @@ void ServerConnect::initTLSConnect()
             certificate_data,
             private_key_data,
             pem_password
-        }
+        },
+        config->getContext()->server_receive_interval
     });
 };
 
@@ -50,6 +58,7 @@ void ServerConnect::onTLSConnectionInterruption(void *data)
     event_target->dispatchEvent("error", param);
     std::cout << "On TLS connection interruption" << std::endl;
     closeConnect();
+    std::cout << "Try to reconnect to server" << std::endl;
     ClientConfig *config = ClientConfig::getInstance();
     std::this_thread::sleep_for(std::chrono::seconds(config->getContext()->server_reconnect_interval));
     run();
@@ -64,13 +73,7 @@ int ServerConnect::sendMessage(const char *message)
         return -1;
     }
 
-    int bytes_write = SSL_write(tls_connect->getSSL(), message, strlen(message));
-    if (bytes_write <= 0)
-    {
-        std::cerr << "Failed to send message." << std::endl;
-        closeConnect();
-        return -1;
-    }
+    tls_connect->send(message);
 
     laster_send_time = time(NULL);
     return 0;
@@ -111,6 +114,13 @@ int ServerConnect::heartbeat()
             std::cout << "send heartbeat: " << j.dump().c_str() << std::endl;
 
             sendMessage(j.dump().c_str());
+        }
+
+        // 放弃 CPU 时间片，允许其他线程或进程运行
+        std::this_thread::yield();
+        // 等待一段时间，避免占用 CPU 过多
+        if (config->getContext()->server_heartbeat_interval > 0) {
+            std::this_thread::sleep_for(std::chrono::seconds(config->getContext()->server_heartbeat_interval - 1));
         }
     }
     return 0;

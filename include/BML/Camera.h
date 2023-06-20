@@ -44,6 +44,9 @@ public:
     // getAspectRatio()方法是一个虚方法，由子类实现
     virtual float getAspectRatio() const = 0;
 
+    // getFrameBuffer 的方法是一个虚方法，由子类实现
+    virtual unsigned int getFrameBuffer() const = 0;
+
 private:
     Vector3 m_position;           // 摄像机位置
     Vector3 m_direction;          // 摄像机朝向

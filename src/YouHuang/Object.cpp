@@ -1,26 +1,26 @@
-#include "BML/Object3D.h"
+#include "YouHuang/Object.h"
 
 // 构造函数
-Object3D::Object3D()
+Object::Object()
     : m_position(0.0f, 0.0f, 0.0f), m_scale(1.0f, 1.0f, 1.0f), m_rotation(0.0f, 0.0f, 0.0f) {}
 
 // 设置物体的位置
-void Object3D::setPosition(const Vector3& position) {
+void Object::setPosition(const Vector3& position) {
     m_position = position;
 }
 
 // 设置物体的缩放
-void Object3D::setScale(const Vector3& scale) {
+void Object::setScale(const Vector3& scale) {
     m_scale = scale;
 }
 
 // 设置物体的旋转
-void Object3D::setRotation(const Vector3& rotation) {
+void Object::setRotation(const Vector3& rotation) {
     m_rotation = rotation;
 }
 
 // 获取物体的变换矩阵
-Matrix4 Object3D::getTransformMatrix() const {
+Matrix4 Object::getTransformMatrix() const {
     // 计算旋转矩阵
     Matrix4 rotX = Matrix4::rotateX(m_rotation.getX());
     Matrix4 rotY = Matrix4::rotateY(m_rotation.getY());
@@ -36,7 +36,7 @@ Matrix4 Object3D::getTransformMatrix() const {
 }
 
 // 获取物体的包围盒（最小和最大顶点）
-BoundingBox Object3D::getBoundingBox() const {
+BoundingBox Object::getBoundingBox() const {
     // 顶点坐标
     Vector3 v[8] = {
         Vector3(-0.5f, -0.5f, -0.5f),

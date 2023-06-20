@@ -10,6 +10,7 @@ struct TLSConnectOptions
 {
     TCPConnectOptions* tcp_options;
     PEMCryptionOptions* pem_options;
+    int server_receive_interval;
 };
 
 class TLSConnect
@@ -28,9 +29,14 @@ private:
     TCPConnect* tcp_connect;
     PEMCryption* pem_cryption;
     int status = 0;
+    const char *ssl_error_message;
 
     void initTCPConnect();
     void initPEMCryption();
+    void initSSLConnect();
+    void waitSocketReadable();
+    void waitSocketWritable();
+    void handleSSLError();
 };
 
 #endif // TLS_CONNECT_H

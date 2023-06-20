@@ -1,15 +1,15 @@
-#ifndef BML_OBJECT3D_H
-#define BML_OBJECT3D_H
+#ifndef YOUHUANG_OBJECT_H
+#define YOUHUANG_OBJECT_H
 
 #include <cmath>
 #include "BML/Vector3.h"   // 三维向量类
 #include "BML/Matrix4.h"   // 4x4矩阵类
 #include "BML/BoundingBox.h"   // 包围盒类
 
-class Object3D {
+class Object {
 public:
     // 构造函数
-    Object3D();
+    Object();
 
     // 获取物体的位置、缩放和旋转信息
     Vector3 getPosition() const { return m_position; }

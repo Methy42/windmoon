@@ -34,6 +34,8 @@ PEMCryption::PEMCryption(PEMCryptionOptions *options)
             return;
         }
 
+        SSL_CTX_set_options(ctx, SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1 | SSL_OP_NO_TLSv1_1 | SSL_OP_NO_TLSv1_2);
+
         // Load the certificate and private key from the disk
         BIO *certificate_bio = BIO_new_mem_buf(options->certificate_data, -1);
         if (certificate_bio == NULL)

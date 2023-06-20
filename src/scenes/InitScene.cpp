@@ -6,8 +6,8 @@ InitScene::InitScene(/* args */)
 
 int InitScene::start()
 {
-    // ServerConnect *connect = ServerConnect::getInstance();
-    // connect->run();
+    ServerConnect *connect = ServerConnect::getInstance();
+    connect->run();
 
     return 0;
 }
