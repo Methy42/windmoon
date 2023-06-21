@@ -1,6 +1,10 @@
 #include "BML/Vector3.h"
 
 const Vector3 Vector3::ZERO(0.0f, 0.0f, 0.0f);
+const Vector3 Vector3::UNIT_X(1.0f, 0.0f, 0.0f);
+const Vector3 Vector3::UNIT_Y(0.0f, 1.0f, 0.0f);
+const Vector3 Vector3::UNIT_Z(0.0f, 0.0f, 1.0f);
+const Vector3 Vector3::UNIT_SCALE(1.0f, 1.0f, 1.0f);
 
 // 构造函数
 Vector3::Vector3(): m_x(0), m_y(0), m_z(0) {}
@@ -80,6 +84,11 @@ Vector3 Vector3::reflect(const Vector3& normal) const {
 
 float Vector3::distanceTo(const Vector3& other) const {
     return (*this - other).length();
+}
+
+// lengthSquared 函数 用于计算向量长度的平方
+float Vector3::lengthSquared() const {
+    return m_x * m_x + m_y * m_y + m_z * m_z;
 }
 
 // 获取向量的x, y, z分量

@@ -3,7 +3,7 @@
 
 #include <thread>
 #include "utils/ServerConnect.h"
-#include "YouHuang/Scene.h"
+#include "SML/Scene.h"
 
 class InitScene: Scene
 {

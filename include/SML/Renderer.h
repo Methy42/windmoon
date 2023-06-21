@@ -1,12 +1,12 @@
-#ifndef YOUHUANG_RENDERER_H
-#define YOUHUANG_RENDERER_H
+#ifndef SML_RENDERER_H
+#define SML_RENDERER_H
 
 #include <vector>
 #include <cmath>
-#include "BML/Camera.h"
+#include "SML/Camera.h"
 #include "BML/Color.h"
-#include "YouHuang/Object.h"
-#include "YouHuang/Scene.h"
+#include "SML/Object.h"
+#include "SML/Scene.h"
 
 class Renderer {
 public:
@@ -19,4 +19,4 @@ private:
     Camera * m_currentCamera;
 };
 
-#endif /* YOUHUANG_RENDERER_H */
+#endif /* SML_RENDERER_H */

@@ -1,9 +1,9 @@
-#ifndef YOUHUANG_SCENE_H
-#define YOUHUANG_SCENE_H
+#ifndef SML_SCENE_H
+#define SML_SCENE_H
 
 #include <vector>
-#include "YouHuang/Object.h"
-#include "BML/Camera.h"
+#include "SML/Object.h"
+#include "SML/Camera.h"
 
 class Scene {
 public:
@@ -29,4 +29,4 @@ private:
     Camera * m_currentCamera;
 };
 
-#endif  // YOUHUANG_SCENE_H
+#endif  // SML_SCENE_H

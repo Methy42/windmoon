@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include "BML/Vector3.h"
+#include "BML/Vector4.h"
 
 class Matrix4 {
 public:
@@ -21,6 +22,13 @@ public:
     float get(int row, int col) const;
     // 设置矩阵元素
     void set(int row, int col, float value);
+
+    // setColumn 方法是用来设置矩阵的某一列的
+    void setColumn(int col, const Vector3& v);
+    void setColumn(int col, const Vector4& v);
+    // setRow 方法是用来设置矩阵的某一行的
+    void setRow(int row, const Vector3& v);
+    void setRow(int row, const Vector4& v);
 
     // 矩阵加减法
     Matrix4 operator+(const Matrix4& mat) const;
@@ -67,6 +75,8 @@ public:
     static Matrix4 orthographic(float left, float right, float bottom, float top, float nearPlane, float farPlane);
     // lookAt函数 用于创建从世界空间到视图空间的变换矩阵
     static Matrix4 lookAt(const Vector3& eye, const Vector3& target, const Vector3& up);
+    // identity 函数 用于创建单位矩阵
+    static Matrix4 identity();
 
 private:
     float m_data[16];

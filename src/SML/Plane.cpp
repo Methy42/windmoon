@@ -1,13 +1,47 @@
-#include "BML/Plane.h"
+#include "SML/Plane.h"
 
-Plane::Plane() : m_normal(0, 1, 0), m_distance(0) {}
+Plane::Plane(float width, float height)
+    : Shape(), m_width(width), m_height(height) {}
 
-Plane::Plane(const Vector3& point, const Vector3& normal)
-    : m_normal(normal.normalize()), m_distance(-m_normal * point) {}
+void Plane::computeVertices() {
+  float halfWidth = m_width * 0.5f;
+  float halfHeight = m_height * 0.5f;
+  Vector3 vertices[] = {
+      {halfWidth, 0.0f, halfHeight},
+      {halfWidth, 0.0f, -halfHeight},
+      {-halfWidth, 0.0f, -halfHeight},
+      {-halfWidth, 0.0f, halfHeight},
+  };
+  // 计算模型矩阵
+  m_modelMatrix = Matrix4::translate(m_position) * Matrix4::scale(m_scale);
+  // 在模型矩阵下计算顶点坐标
+  for (int i = 0; i < 4; i++) {
+    m_vertices[i] = m_modelMatrix * vertices[i];
+  }
+}
 
-Plane::Plane(float a, float b, float c, float d)
-    : m_normal(a, b, c), m_distance(d / sqrt(a * a + b * b + c * c)) {
-    m_normal.normalize();
+void Plane::computeNormals() {
+  Vector3 normal = (m_vertices[1] - m_vertices[0]) ^ (m_vertices[2] - m_vertices[0]);
+  m_normal = normal.normalize();
+}
+
+void Plane::computeTextureCoords() {
+  float hw = m_width / 2.0f;
+  float hh = m_height / 2.0f;
+  Vector2 texcoords[] = {{1.0f, 1.0f}, {1.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 1.0f}};
+  for (int i = 0; i < 4; i++) {
+    m_texcoords[i] = Vector2(texcoords[i].x * m_width, texcoords[i].y * m_height);
+  }
+
+  // 线性插值计算其它顶点的纹理坐标
+  float distanceX = m_vertices[1].getX() - m_vertices[0].getX();
+  float distanceZ = m_vertices[3].getZ() - m_vertices[0].getZ();
+
+  Vector2 texCoord0 = m_texcoords[3] + Vector2(distanceX / m_width, distanceZ / m_height) * (m_texcoords[0] - m_texcoords[3]);
+  Vector2 texCoord1 = m_texcoords[2] + Vector2(distanceX / m_width, distanceZ / m_height) * (m_texcoords[1] - m_texcoords[2]);
+
+  m_texcoords[0] = texCoord0;
+  m_texcoords[1] = texCoord1;
 }
 
 bool Plane::operator==(const Plane& plane) const {
@@ -23,6 +57,7 @@ void Plane::set(const Vector3& point, const Vector3& normal) {
     m_distance = -m_normal * point;
 }
 
+// 通过三个点来定义平面, d 是平面方程的常量项，表示平面到原点的距离
 void Plane::set(float a, float b, float c, float d) {
     m_normal.set(a, b, c);
     m_distance = d / sqrt(a * a + b * b + c * c);

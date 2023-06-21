@@ -40,6 +40,34 @@ void Matrix4::set(int row, int col, float value) {
     m_data[row * 4 + col] = value;
 }
 
+// setColumn 方法是用来设置矩阵的某一列的
+void Matrix4::setColumn(int col, const Vector3& v) {
+    m_data[col] = v.getX();
+    m_data[col + 4] = v.getY();
+    m_data[col + 8] = v.getZ();
+}
+
+void Matrix4::setColumn(int col, const Vector4& v) {
+    m_data[col] = v.getX();
+    m_data[col + 4] = v.getY();
+    m_data[col + 8] = v.getZ();
+    m_data[col + 12] = v.getW();
+}
+
+// setRow 方法是用来设置矩阵的某一行的
+void Matrix4::setRow(int row, const Vector3& v) {
+    m_data[row * 4] = v.getX();
+    m_data[row * 4 + 1] = v.getY();
+    m_data[row * 4 + 2] = v.getZ();
+}
+
+void Matrix4::setRow(int row, const Vector4& v) {
+    m_data[row * 4] = v.getX();
+    m_data[row * 4 + 1] = v.getY();
+    m_data[row * 4 + 2] = v.getZ();
+    m_data[row * 4 + 3] = v.getW();
+}
+
 // 矩阵加减法
 Matrix4 Matrix4::operator+(const Matrix4& mat) const {
     Matrix4 result;
@@ -359,6 +387,16 @@ Matrix4 Matrix4::lookAt(const Vector3& eye, const Vector3& target, const Vector3
     result.set(3, 0, -(xaxis * eye));
     result.set(3, 1, -(yaxis * eye));
     result.set(3, 2, -(zaxis * eye));
+    result.set(3, 3, 1.0f);
+    return result;
+}
+
+// identity 函数 用于创建单位矩阵
+Matrix4 Matrix4::identity() {
+    Matrix4 result;
+    result.set(0, 0, 1.0f);
+    result.set(1, 1, 1.0f);
+    result.set(2, 2, 1.0f);
     result.set(3, 3, 1.0f);
     return result;
 }

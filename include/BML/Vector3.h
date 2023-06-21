@@ -39,6 +39,8 @@ public:
     Vector3 reflect(const Vector3& normal) const;
     // distanceTo函数 用于计算两个向量之间的距离
     float distanceTo(const Vector3& other) const;
+    // lengthSquared 函数 用于计算向量长度的平方
+    float lengthSquared() const;
 
     // 获取向量的x, y, z分量
     float getX() const;
@@ -52,6 +54,10 @@ public:
     void set(float x, float y, float z);
 
     static const Vector3 ZERO; // 静态常量 ZERO
+    static const Vector3 UNIT_Z;  // 静态常量 UNIT_Z
+    static const Vector3 UNIT_Y;  // 静态常量 UNIT_Y
+    static const Vector3 UNIT_X;  // 静态常量 UNIT_X
+    static const Vector3 UNIT_SCALE;  // 静态常量 UNIT_SCALE
 
 private:
     float m_x, m_y, m_z;
