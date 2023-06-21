@@ -17,7 +17,7 @@ int password_cb(char *buf, int size, int rwflag, void *user_data)
 
 PEMCryption::PEMCryption(PEMCryptionOptions *options)
 {
-    std::cout << "Start to create PEMCryption" << std::endl;
+    Logger::getInstance()->info("Start to create PEMCryption");
 
     event_target = new EventTarget();
 
@@ -29,7 +29,7 @@ PEMCryption::PEMCryption(PEMCryptionOptions *options)
         ctx = SSL_CTX_new(TLS_method());
         if (ctx == NULL)
         {
-            std::cerr << "Failed to create SSL context." << std::endl;
+            Logger::getInstance()->error("Failed to create SSL context.");
             event_target->dispatchEvent("error", new EventCallbackParam{ "SSLContextCreationFailure", "Failed to create SSL context." });
             return;
         }
@@ -40,7 +40,7 @@ PEMCryption::PEMCryption(PEMCryptionOptions *options)
         BIO *certificate_bio = BIO_new_mem_buf(options->certificate_data, -1);
         if (certificate_bio == NULL)
         {
-            std::cerr << "Failed to create certificate BIO." << std::endl;
+            Logger::getInstance()->error("Failed to create certificate BIO.");
             event_target->dispatchEvent("error", new EventCallbackParam{ "CertificateCreationFailure", "Failed to create certificate BIO." });
             return;
         }
@@ -50,7 +50,7 @@ PEMCryption::PEMCryption(PEMCryptionOptions *options)
         BIO *private_key_bio = BIO_new_mem_buf(options->private_key_data, -1);
         if (private_key_bio == NULL)
         {
-            std::cerr << "Failed to create private key BIO." << std::endl;
+            Logger::getInstance()->error("Failed to create private key BIO.");
             event_target->dispatchEvent("error", new EventCallbackParam{ "PrivateKeyCreationFailure", "Failed to create private key BIO." });
             return;
         }
@@ -59,7 +59,7 @@ PEMCryption::PEMCryption(PEMCryptionOptions *options)
 
         if (cert == NULL || pkey == NULL)
         {
-            std::cerr << "Failed to read certificate or private key." << std::endl;
+            Logger::getInstance()->error("Failed to read certificate or private key.");
             event_target->dispatchEvent("error", new EventCallbackParam{ "CertificateOrPrivateKeyReadFailure", "Failed to read certificate or private key." });
             return;
         }
@@ -70,12 +70,11 @@ PEMCryption::PEMCryption(PEMCryptionOptions *options)
         // Check if the client certificate and private-key matches
         if (!SSL_CTX_check_private_key(ctx))
         {
-            std::cerr << "Private key does not match the certificate public key" << std::endl;
+            Logger::getInstance()->error("Private key does not match the certificate public key");
             event_target->dispatchEvent("error", new EventCallbackParam{ "PrivateKeyDoesNotMatchCertificatePublicKey", "Private key does not match the certificate public key" });
             return;
         }
 
-        std::cout << "Success to create PEMCryption" << std::endl;
         event_target->dispatchEvent("created", new EventCallbackParam{ "PEMCryptionCreationSuccess", "Success to create PEMCryption" });
     }).detach();
 };

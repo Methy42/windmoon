@@ -12,13 +12,13 @@ int ServerConnect::run()
 
     tls_connect->event_target->addEventListener("error", [this](void *data)
     {
-        std::cout << "TLS connect has ERROR!" << std::endl;
+        Logger::getInstance()->error("TLS connect has ERROR!");
         onTLSConnectionInterruption(data);
     });
 
     tls_connect->event_target->addEventListener("connected", [this](void *data)
     {
-        std::cout << "Success to connect to server" << std::endl;
+        Logger::getInstance()->info("Success to connect to server");
         status = 1;
         connect_time = time(NULL);
         std::thread heartbeat_thread(&ServerConnect::heartbeat, this);
@@ -27,7 +27,7 @@ int ServerConnect::run()
 
     tls_connect->event_target->addEventListener("disconnect", [this](void *data)
     {
-        std::cout << "TLS connect has DISCONNECTED!" << std::endl;
+        Logger::getInstance()->info("TLS connect has DISCONNECTED!");
         status = 0;
     });
 
@@ -56,9 +56,9 @@ void ServerConnect::onTLSConnectionInterruption(void *data)
 {
     EventCallbackParam *param = (EventCallbackParam *)data;
     event_target->dispatchEvent("error", param);
-    std::cout << "On TLS connection interruption" << std::endl;
+    Logger::getInstance()->error("On TLS connection interruption");
     closeConnect();
-    std::cout << "Try to reconnect to server" << std::endl;
+    Logger::getInstance()->info("Try to reconnect to server");
     ClientConfig *config = ClientConfig::getInstance();
     std::this_thread::sleep_for(std::chrono::seconds(config->getContext()->server_reconnect_interval));
     run();
@@ -66,10 +66,9 @@ void ServerConnect::onTLSConnectionInterruption(void *data)
 
 int ServerConnect::sendMessage(const char *message)
 {
-    std::cout << "send message: " << message << std::endl;
     if (status == 0)
     {
-        std::cerr << "Failed to send message, server is not connected." << std::endl;
+        Logger::getInstance()->error("Failed to send message, server is not connected.");
         return -1;
     }
 
@@ -102,7 +101,7 @@ int ServerConnect::heartbeat()
         int now_time = time(NULL);
         if (now_time - laster_send_time > config->getContext()->server_heartbeat_interval)
         {
-            std::cout << "start to send heartbeat" << std::endl;
+            Logger::getInstance()->debug("Start to send heartbeat");
 
             nlohmann::json j;
             j["type"] = "heartBeat";
@@ -111,7 +110,7 @@ int ServerConnect::heartbeat()
             // 当前时间戳到毫秒 int 13位
             j["time"] = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
-            std::cout << "send heartbeat: " << j.dump().c_str() << std::endl;
+            Logger::getInstance()->debug(std::string("Send heartbeat: ") + j.dump().c_str());
 
             sendMessage(j.dump().c_str());
         }

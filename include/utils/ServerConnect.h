@@ -15,6 +15,7 @@
 #include "config/ClientConfig.h"
 #include "utils/UUIDUtil.h"
 #include "config/PEMConfig.h"
+#include "utils/Logger.h"
 
 class ServerConnect
 {

@@ -6,10 +6,10 @@ TCPConnect::TCPConnect(TCPConnectOptions *options)
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
-        std::cerr << "Failed to create socket." << std::endl;
+        Logger::getInstance()->error("Failed to create socket.");
         event_target->dispatchEvent("error", new EventCallbackParam { "SocketCreationFailure", "Failed to create socket." });
     } else {
-        std::cout << "Socket created." << std::endl;
+        Logger::getInstance()->info("Socket created.");
         event_target->dispatchEvent("socket_created", new EventCallbackParam { "SocketCreationSuccess", "Socket created." });
     }
 
@@ -20,9 +20,7 @@ TCPConnect::TCPConnect(TCPConnectOptions *options)
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(options->server_port);  // 设置端口号为1234
     inet_pton(AF_INET, options->server_ip, &server_addr.sin_addr);
-    std::cout << "start tcp connect" << std::endl;
-    std::cout << "server_ip: " << options->server_ip << std::endl;
-    std::cout << "server_port: " << options->server_port << std::endl;
+    Logger::getInstance()->info(std::string("Start TCP connect to ") + options->server_ip + ":" + std::to_string(options->server_port));
 
 
     // 连接服务器
@@ -41,17 +39,17 @@ TCPConnect::TCPConnect(TCPConnectOptions *options)
 
         int ret = select(sockfd + 1, NULL, &writefds, NULL, &timeout);
         if (ret <= 0) {
-            std::cerr << "Failed to create TCP connect." << std::endl;
+            Logger::getInstance()->error("Failed to create TCP connect.");
             event_target->dispatchEvent("error", new EventCallbackParam { "SocketConnectFailure", "Failed to create TCP connect." });
         } else {
             int error = -1;
             socklen_t len = sizeof(error);
             getsockopt(sockfd, SOL_SOCKET, SO_ERROR, &error, &len);
             if (error != 0) {
-                std::cerr << "Failed to get sockopt." << std::endl;
+                Logger::getInstance()->error("Failed to get sockopt.");
                 event_target->dispatchEvent("error", new EventCallbackParam { "SocketConnectFailure", "Failed to get sockopt." });
             } else {
-                std::cout << "Connected to server." << std::endl;
+                Logger::getInstance()->info("Connected to server.");
                 event_target->dispatchEvent("connected", new EventCallbackParam { "SocketConnectSuccess", "Connected to server." });
             }
         }

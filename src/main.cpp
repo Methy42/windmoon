@@ -2,7 +2,8 @@
 #include "scenes/InitScene.h"
 
 int main () {
-    std::cout << "Hello, world!" << std::endl;
+    Logger::getInstance()->setLogLevel(static_cast<Logger::LogLevel>(ClientConfig::getInstance()->getContext()->client_log_level));
+    Logger::getInstance()->info("Client start");
     InitScene initScene;
 
     initScene.start();

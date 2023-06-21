@@ -32,6 +32,7 @@ int ClientConfig::loadConfig()
     context->server_reconnect_interval = j["server_reconnect_interval"].get<int>();
     context->connection_blocking_waiting_time = j["connection_blocking_waiting_time"].get<int>();
     context->server_receive_interval = j["server_receive_interval"].get<int>();
+    context->client_log_level = j["client_log_level"].get<int>();
 
     return 0;
 }
@@ -45,6 +46,7 @@ int ClientConfig::saveConfig()
     j["server_reconnect_interval"] = context->server_reconnect_interval;
     j["connection_blocking_waiting_time"] = context->connection_blocking_waiting_time;
     j["server_receive_interval"] = context->server_receive_interval;
+    j["client_log_level"] = context->client_log_level;
 
     std::ofstream o("config/client.json");
     o << std::setw(4) << j << std::endl;

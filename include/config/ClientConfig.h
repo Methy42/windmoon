@@ -14,6 +14,7 @@ struct ClientConfigContext
     int server_reconnect_interval; // Reconnect interval
     int connection_blocking_waiting_time; // Connection blocking waiting time
     int server_receive_interval; // Server receive interval
+    int client_log_level; // Client log level
 };
 
 class ClientConfig

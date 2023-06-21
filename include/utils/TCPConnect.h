@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include <thread>
 #include "utils/EventTarget.h"
+#include "utils/Logger.h"
 
 struct TCPConnectOptions
 {

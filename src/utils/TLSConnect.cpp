@@ -44,20 +44,20 @@ void TLSConnect::initTCPConnect()
     tcp_connect = new TCPConnect(options->tcp_options);
     tcp_connect->event_target->addEventListener("error", [this, &promise](void* data) -> void
     {
-        std::cout << "Create TCP connect has ERROR!" << std::endl;
+        Logger::getInstance()->error("Create TCP connect has ERROR!");
         EventCallbackParam* param = (EventCallbackParam*)data;
         promise.set_exception(std::make_exception_ptr(std::runtime_error(param->message)));
     });
 
     tcp_connect->event_target->addEventListener("connected", [this, &promise](void* data) -> void
     {
-        std::cout << "Success to create TCP connect" << std::endl;
+        Logger::getInstance()->info("Success to create TCP connect");
         promise.set_value();
     });
 
     future.get();
 
-    std::cout << "initTCPConnect success" << std::endl;
+    Logger::getInstance()->info("initTCPConnect success");
 }
 
 void TLSConnect::initPEMCryption()
@@ -75,22 +75,22 @@ void TLSConnect::initPEMCryption()
 
     pem_cryption->event_target->addEventListener("created", [this, &promise](void* data) -> void
     {
-        std::cout << "Success to create PEMCryption" << std::endl;
+        Logger::getInstance()->info("Success to create PEMCryption");
         promise.set_value();
     });
 
     future.get();
-    std::cout << "initPEMCryption success" << std::endl;
+    Logger::getInstance()->info("initPEMCryption success");
 }
 
 void TLSConnect::initSSLConnect()
 {
     if (SSL_connect(ssl) <= 0) {
-        std::cout << "SSL connect error" << std::endl;
+        Logger::getInstance()->error("SSL connect error");
         handleSSLError();
         return;
     }
-    std::cout << "initSSLConnect success" << std::endl;
+    Logger::getInstance()->info("SSL connect success");
     event_target->dispatchEvent("connected", NULL);
     status = 1;
 
@@ -100,7 +100,7 @@ void TLSConnect::initSSLConnect()
 
 void TLSConnect::waitSocketReadable()
 {
-    std::cout << "wait socket readable" << std::endl;
+    Logger::getInstance()->info("wait socket readable");
     fd_set rfds;
     FD_ZERO(&rfds);
     FD_SET(tcp_connect->getSockfd(), &rfds);
@@ -121,7 +121,7 @@ void TLSConnect::waitSocketReadable()
 
 void TLSConnect::waitSocketWritable()
 {
-    std::cout << "wait socket writable" << std::endl;
+    Logger::getInstance()->info("wait socket writable");
     fd_set wfds;
     FD_ZERO(&wfds);
     FD_SET(tcp_connect->getSockfd(), &wfds);
@@ -142,7 +142,7 @@ void TLSConnect::waitSocketWritable()
 
 void TLSConnect::handleSSLError()
 {
-    std::cout << "handleSSLError" << std::endl;
+    Logger::getInstance()->error("SSL connect error");
     status = 0;
     event_target->dispatchEvent("disconnect", NULL);
     const char* err_buf = "";
@@ -195,7 +195,7 @@ SSL* TLSConnect::getSSL()
 
 void TLSConnect::receive()
 {
-    std::cout << "start receive" << std::endl;
+    Logger::getInstance()->info("start receive");
     while (status == 1)
     {
         char buffer[65535];
@@ -203,7 +203,7 @@ void TLSConnect::receive()
 
         if (ssl == NULL)
         {
-            std::cerr << "ssl is null" << std::endl;
+            Logger::getInstance()->error("ssl is null");
             event_target->dispatchEvent("error", new EventCallbackParam { "TLSConnectFailure", "ssl is null" });
             return;
         }
@@ -227,7 +227,7 @@ void TLSConnect::receive()
             // std::cout << "SSL_pending return 0" << std::endl;
         }
         else {
-            std::cout << "SSL_pending return -1" << std::endl;
+            Logger::getInstance()->error("SSL_pending return -1");
             handleSSLError();
             return;
         }
@@ -243,20 +243,20 @@ int TLSConnect::send(const char* message)
 {
     if (ssl == NULL)
     {
-        std::cerr << "ssl is null" << std::endl;
+        Logger::getInstance()->error("ssl is null");
         event_target->dispatchEvent("error", new EventCallbackParam { "TLSConnectFailure", "ssl is null" });
         return -1;
     }
 
     if (status != 1) {
-        std::cerr << "Tls not connected" << std::endl;
+        Logger::getInstance()->error("Tls not connected");
         return -1;
     }
 
     int bytes_sent = SSL_write(ssl, message, strlen(message));
     if (bytes_sent <= 0)
     {
-        std::cout << "SSL_write error" << std::endl;
+        Logger::getInstance()->error("SSL_write error");
         handleSSLError();
         return -1;
     }

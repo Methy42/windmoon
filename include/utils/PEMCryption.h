@@ -12,6 +12,7 @@
 #include <openssl/x509v3.h>
 #include <openssl/pkcs12.h>
 #include "utils/EventTarget.h"
+#include "utils/Logger.h"
 
 struct PEMCryptionOptions
 {
