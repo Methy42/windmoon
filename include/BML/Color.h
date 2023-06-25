@@ -4,6 +4,7 @@
 #include <cmath>
 #include <algorithm>
 #include <string>
+#include <iostream>
 #include "BML/Vector3.h"
 
 class Color {

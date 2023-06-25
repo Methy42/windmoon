@@ -1,9 +1,9 @@
 #ifndef SML_PERSPECTIVE_CAMERA_H
 #define SML_PERSPECTIVE_CAMERA_H
 
+#include <vector>
 #include "SML/Camera.h"
-#include "SML/Plane.h"
-
+#include "SML/FrustumPlane.h"
 
 class PerspectiveCamera : public Camera {
 public:
@@ -19,7 +19,7 @@ public:
     Matrix4 getProjectionMatrix() const override;
 
     // 计算视锥体的六个面
-    std::vector<Plane> getFrustumPlanes() const;
+    std::vector<FrustumPlane> getFrustumPlanes() const;
     void calculateFrustumPlanes();
 
     // 判断三角形是否在相机视锥体内
@@ -33,7 +33,7 @@ public:
 
 private:
     // 视锥体的六个面
-    Plane frustum_planes[6];
+    FrustumPlane frustum_planes[6];
 };
 
 #endif  // SML_PERSPECTIVE_CAMERA_H

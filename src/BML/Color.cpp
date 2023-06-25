@@ -3,7 +3,7 @@
 const Color Color::WHITE(255.0f, 255.0f, 255.0f, 255.0f);
 
 Color::Color()
-    : m_r(0.0f), m_g(0.0f), m_b(0.0f), m_a(1.0f) {}
+    : m_r(0.0f), m_g(0.0f), m_b(0.0f), m_a(255.0f) {}
 
 Color::Color(float r, float g, float b, float a)
     : m_r(r), m_g(g), m_b(b), m_a(a) {
@@ -254,5 +254,6 @@ Color Color::clamp() const {
 
 Color Color::blend(const Color& c1, const Color& c2, float t) {
     // 混合颜色c1和c2，系数为t
-    return c1 * (1.0f - t) + c2 * t;
+    Color c = c1 * (1.0f - t) + c2 * t;
+    return c;
 }

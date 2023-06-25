@@ -1,19 +1,19 @@
 #include "SML/Plane.h"
 
-Plane::Plane(int width, int height, Vector3 normal, Vector3 up, Vector3 position)
-    : m_width(width), m_height(height), m_normal(normal), m_up(up), m_position(position)
+Plane::Plane(float width, float height)
 {
+    this->v1 = {-width / 2, 0, -height / 2};
+    this->v2 = {width / 2, 0, -height / 2};
+    this->v3 = {-width / 2, 0, height / 2};
+    this->v4 = {width / 2, 0, height / 2};
 }
 
 Plane::Plane(Vector3 v1, Vector3 v2, Vector3 v3)
 {
-    Vector3 v12 = v2 - v1;
-    Vector3 v13 = v3 - v1;
-    m_normal = v12 ^ v13;
-    m_normal.normalize();
-    m_position = v1;
-    m_width = 10;
-    m_height = 10;
+    this->v1 = v1;
+    this->v2 = v2;
+    this->v3 = v3;
+    this->v4 = v3 + (v2 - v1);
 }
 
 Plane::~Plane()
@@ -23,24 +23,10 @@ Plane::~Plane()
 std::vector<Vector3> Plane::getVertices() const
 {
     std::vector<Vector3> vertices;
-    // right是法线normal在平面上的一个垂直向量
-    Vector3 right = m_normal ^ Vector3(0, 1, 0);
-    Vector3 up = right ^ m_normal;
-    std::cout << "m_normal: " << m_normal.toString() << std::endl;
-    std::cout << "right: " << right.toString() << std::endl;
-    std::cout << "up: " << up.toString() << std::endl;
-    right.normalize();
-    up.normalize();
-    Vector3 left = -right;
-    Vector3 down = -up;
-    Vector3 topLeft = m_position + left * m_width / 2 + up * m_height / 2;
-    Vector3 topRight = m_position + right * m_width / 2 + up * m_height / 2;
-    Vector3 bottomLeft = m_position + left * m_width / 2 + down * m_height / 2;
-    Vector3 bottomRight = m_position + right * m_width / 2 + down * m_height / 2;
-    vertices.push_back(topLeft);
-    vertices.push_back(topRight);
-    vertices.push_back(bottomLeft);
-    vertices.push_back(bottomRight);
+    vertices.push_back(v1);
+    vertices.push_back(v2);
+    vertices.push_back(v3);
+    vertices.push_back(v4);
     return vertices;
 }
 
@@ -48,12 +34,10 @@ std::vector<Triangle> Plane::getTriangles() const
 {
     std::vector<Triangle> triangles;
 
-    std::vector<Vector3> vertices = getVertices();
-
-    Vector3 topLeft = vertices[0];
-    Vector3 topRight = vertices[1];
-    Vector3 bottomLeft = vertices[2];
-    Vector3 bottomRight = vertices[3];
+    Vector3 topLeft = v1;
+    Vector3 topRight = v2;
+    Vector3 bottomLeft = v3;
+    Vector3 bottomRight = v4;
 
     // 计算纹理顶点坐标
     Vector2 texTopLeft = {0, 0};
@@ -81,17 +65,17 @@ BoundingBox Plane::getBoundingBox() const
     return BoundingBox(minMax[0], minMax[1]);
 }
 
-void Plane::normalize()
-{
-    m_normal.normalize();
-}
-
-Vector3 Plane::getNormal() const
-{
-    return m_normal;
-}
-
 double Plane::distanceToPoint(Vector3 point) const
 {
-    return (point - m_position) * m_normal;
+    // 计算平面法向量
+    Vector3 normal = (v2 - v1 ^ v3 - v1).normalize();
+
+    // 计算平面方程
+    double a = normal.x;
+    double b = normal.y;
+    double c = normal.z;
+    double d = -(a * v1.x + b * v1.y + c * v1.z);
+
+    // 计算点到平面的距离
+    return std::abs(a * point.x + b * point.y + c * point.z + d) / std::sqrt(a * a + b * b + c * c);
 }

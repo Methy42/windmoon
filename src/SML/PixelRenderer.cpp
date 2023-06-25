@@ -16,7 +16,7 @@ Color PixelRenderer::getPhongShading(const Vector3& point, const Vector3& normal
     Color ambient = Color(material->getAmbient(), material->getAmbient(), material->getAmbient(), material->getAmbient());
 
     // 计算漫反射光
-    Color diffuse = Color(0, 0, 0, 255);
+    Color diffuse = Color(0, 0, 0, 0);
     for (Light* light: lights) {
         // 计算光线方向
         Vector3 lightDirection = light->getPosition() - point;
@@ -28,7 +28,7 @@ Color PixelRenderer::getPhongShading(const Vector3& point, const Vector3& normal
     }
 
     // 计算镜面反射光
-    Color specular = Color(0, 0, 0, 255);
+    Color specular = Color(0, 0, 0, 0);
     for (Light* light: lights) {
         // 计算光线方向
         Vector3 lightDirection = light->getPosition() - point;
@@ -133,30 +133,48 @@ void PixelRenderer::RendererRender(Scene * scene, int width, int height, ...) co
         // 计算三角形所覆盖的像素范围
         int minX = std::floor(minPoint.x);
         int maxX = std::ceil(maxPoint.x);
-        int minY = std::floor(minPoint.y);
-        int maxY = std::ceil(maxPoint.y);
+        int minY = std::floor(minPoint.z);
+        int maxY = std::ceil(maxPoint.z);
 
         std::cout << "MinX: " << minX << ", MaxX: " << maxX << ", MinY: " << minY << ", MaxY: " << maxY << std::endl;
 
-        // 遍历每个像素，并判断其是否被该三角形所覆盖
+        // 遍历修改像素颜色
         for (int i = minX; i < maxX; i++) {
             for (int j = minY; j < maxY; j++) {
-                // 判断当前像素是否在三角形内部
                 Vector3 pixelCenter = Vector3(i + 0.5f, j + 0.5f, 0);
-                if (triangleInFrustum.isPointInside(pixelCenter)) {
-                    // 计算像素中心到三角形的距离
-                    float distance = triangleInFrustum.getDistanceToPoint(pixelCenter);
+                // 获取像素原始颜色
+                Color* originalColor = &pixelMatrix[j + (height / 2)][i + (width / 2)];
 
-                    // 获取像素原始颜色
-                    Color* originalColor = pixelMatrix[height - j - 1] + i;
+                // 使用 Phong 基础光照模型计算像素新颜色
+                Color newColor = getPhongShading(pixelCenter, triangleInFrustum.normal(), cameraDirection, triangleExtend.material, *scene);
 
-                    // 使用 Phong 基础光照模型计算像素新颜色
-                    Color newColor = getPhongShading(pixelCenter, triangleInFrustum.normal(), cameraDirection, triangleExtend.material, *scene);
-
-                    // 将新颜色与原始颜色进行混合
-                    *originalColor = originalColor->blend(newColor, triangleExtend.material->getColor(), distance);
-                }
+                // 修改像素颜色
+                *originalColor = newColor;
             }
         }
+
+
+        // 遍历每个像素，并判断其是否被该三角形所覆盖
+        // for (int i = minX; i < maxX; i++) {
+        //     for (int j = minY; j < maxY; j++) {
+        //         // 判断当前像素是否在三角形内部
+        //         Vector3 pixelCenter = Vector3(i + 0.5f, j + 0.5f, 0);
+        //         if (triangleInFrustum.isPointInside(pixelCenter)) {
+        //             // 计算像素中心到三角形的距离
+        //             float distance = triangleInFrustum.getDistanceToPoint(pixelCenter);
+
+        //             // 获取像素原始颜色
+        //             Color* originalColor = pixelMatrix[height - j - 1] + i;
+
+        //             // 使用 Phong 基础光照模型计算像素新颜色
+        //             Color newColor = getPhongShading(pixelCenter, triangleInFrustum.normal(), cameraDirection, triangleExtend.material, *scene);
+
+        //             // 将新颜色与原始颜色进行混合
+        //             *originalColor = originalColor->blend(newColor, triangleExtend.material->getColor(), 0.5f);
+
+        //             std::cout << "1" << std::endl;
+        //         }
+        //     }
+        // }
     }
 }

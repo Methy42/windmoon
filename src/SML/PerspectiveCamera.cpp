@@ -10,9 +10,9 @@ Matrix4 PerspectiveCamera::getProjectionMatrix() const
     return Matrix4::perspective(fov, aspect, near, far);
 }
 
-std::vector<Plane> PerspectiveCamera::getFrustumPlanes() const
+std::vector<FrustumPlane> PerspectiveCamera::getFrustumPlanes() const
 {
-    std::vector<Plane> planes;
+    std::vector<FrustumPlane> planes;
 
     // 计算相机坐标系下的视锥体顶点位置
     float tan_fov = tan(fov * 0.5f * M_PI / 180.0f);
@@ -45,7 +45,7 @@ std::vector<Plane> PerspectiveCamera::getFrustumPlanes() const
 
 void PerspectiveCamera::calculateFrustumPlanes()
 {
-    std::vector<Plane> planes = getFrustumPlanes();
+    std::vector<FrustumPlane> planes = getFrustumPlanes();
     for (int i = 0; i < 6; i++) {
         frustum_planes[i] = planes[i];
     }
@@ -59,7 +59,7 @@ bool PerspectiveCamera::isTriangleInFrustum(const Triangle& triangle) const
 
     // 判断三角形是否在所有裁剪面的同侧
     for (int i = 0; i < 6; i++) {
-        const Plane& plane = frustum_planes[i];
+        const FrustumPlane& plane = frustum_planes[i];
 
         if (plane.getNormal() * normal > 0.0f) {
             // 如果三角形与平面同侧，检查是否有交点在平面内

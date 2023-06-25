@@ -14,9 +14,11 @@
 
 class Plane : public Shape {
 public:
-    Plane(int width = 10, int height = 10, Vector3 normal = {0, 0, 1}, Vector3 up = {0, 1, 0}, Vector3 position = {0, 0, 0});
+    Plane(float width = 10, float height = 10);
     Plane(Vector3 v1, Vector3 v2, Vector3 v3);
     ~Plane();
+
+    Vector3 v1, v2, v3, v4;
 
     // 实现Shape中的获取顶点坐标方法
     std::vector<Vector3> getVertices() const override;
@@ -27,18 +29,8 @@ public:
     // 实现Shape中的获取包围盒方法
     BoundingBox getBoundingBox() const override;
 
-    // 归一化平面法向量
-    void normalize();
-
-    // 获取平面法向量
-    Vector3 getNormal() const;
-
     // distanceToPoint方法返回点到平面的距离
     double distanceToPoint(Vector3 point) const;
-
-private:
-    int m_width, m_height;
-    Vector3 m_normal, m_up, m_position;
 };
 
 #endif  // SML_PLANE_H
