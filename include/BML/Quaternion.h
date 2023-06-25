@@ -14,6 +14,8 @@ public:
     // 拷贝构造函数
     Quaternion(const Quaternion& q);
 
+    float w, x, y, z;
+
     // 四元数加法
     Quaternion operator+(const Quaternion& q) const;
     // 四元数减法
@@ -26,16 +28,7 @@ public:
     // 四元数标量除法
     Quaternion operator/(float c) const;
 
-    // 获取四元数元素
-    float getW() const;
-    float getX() const;
-    float getY() const;
-    float getZ() const;
-    // 设置四元数元素
-    void setW(float w);
-    void setX(float x);
-    void setY(float y);
-    void setZ(float z);
+    void set(float w, float x, float y, float z);
 
     // 四元数共轭
     Quaternion conjugate() const;
@@ -55,9 +48,6 @@ public:
     Vector3 rotate(const Vector3& v) const;
 
     Matrix4 getMatrix() const;
-
-private:
-    float m_w, m_x, m_y, m_z;
 };
 
 #endif // BML_QUATERNION_H

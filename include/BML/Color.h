@@ -3,6 +3,8 @@
 
 #include <cmath>
 #include <algorithm>
+#include <string>
+#include "BML/Vector3.h"
 
 class Color {
 public:
@@ -38,6 +40,7 @@ public:
     // 颜色叠加
     Color operator+(const Color& c) const;
     Color& operator+=(const Color& other);
+    Color& operator+=(const Vector3& v);
 
     // 颜色减法
     Color operator-(const Color& other) const;
@@ -55,7 +58,14 @@ public:
     bool operator==(const Color& other) const;
     bool operator!=(const Color& other) const;
 
+    std::string toString() const;
+
     static Color lerp(const Color& c1, const Color& c2, float t);
+
+    Color clamp() const;
+
+    // blend 混合两个颜色
+    static Color blend(const Color& c1, const Color& c2, float t);
 
     static const Color WHITE;
 

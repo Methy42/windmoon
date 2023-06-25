@@ -42,30 +42,30 @@ void Matrix4::set(int row, int col, float value) {
 
 // setColumn 方法是用来设置矩阵的某一列的
 void Matrix4::setColumn(int col, const Vector3& v) {
-    m_data[col] = v.getX();
-    m_data[col + 4] = v.getY();
-    m_data[col + 8] = v.getZ();
+    m_data[col] = v.x;
+    m_data[col + 4] = v.y;
+    m_data[col + 8] = v.z;
 }
 
 void Matrix4::setColumn(int col, const Vector4& v) {
-    m_data[col] = v.getX();
-    m_data[col + 4] = v.getY();
-    m_data[col + 8] = v.getZ();
-    m_data[col + 12] = v.getW();
+    m_data[col] = v.x;
+    m_data[col + 4] = v.y;
+    m_data[col + 8] = v.z;
+    m_data[col + 12] = v.w;
 }
 
 // setRow 方法是用来设置矩阵的某一行的
 void Matrix4::setRow(int row, const Vector3& v) {
-    m_data[row * 4] = v.getX();
-    m_data[row * 4 + 1] = v.getY();
-    m_data[row * 4 + 2] = v.getZ();
+    m_data[row * 4] = v.x;
+    m_data[row * 4 + 1] = v.y;
+    m_data[row * 4 + 2] = v.z;
 }
 
 void Matrix4::setRow(int row, const Vector4& v) {
-    m_data[row * 4] = v.getX();
-    m_data[row * 4 + 1] = v.getY();
-    m_data[row * 4 + 2] = v.getZ();
-    m_data[row * 4 + 3] = v.getW();
+    m_data[row * 4] = v.x;
+    m_data[row * 4 + 1] = v.y;
+    m_data[row * 4 + 2] = v.z;
+    m_data[row * 4 + 3] = v.w;
 }
 
 // 矩阵加减法
@@ -101,9 +101,9 @@ Matrix4 Matrix4::operator*(const Matrix4& mat) const {
 }
 
 Vector3 Matrix4::operator*(const Vector3& v) const {
-    float x = get(0, 0) * v.getX() + get(0, 1) * v.getY() + get(0, 2) * v.getZ() + get(0, 3);
-    float y = get(1, 0) * v.getX() + get(1, 1) * v.getY() + get(1, 2) * v.getZ() + get(1, 3);
-    float z = get(2, 0) * v.getX() + get(2, 1) * v.getY() + get(2, 2) * v.getZ() + get(2, 3);
+    float x = get(0, 0) * v.x + get(0, 1) * v.y + get(0, 2) * v.z + get(0, 3);
+    float y = get(1, 0) * v.x + get(1, 1) * v.y + get(1, 2) * v.z + get(1, 3);
+    float z = get(2, 0) * v.x + get(2, 1) * v.y + get(2, 2) * v.z + get(2, 3);
     return Vector3(x, y, z);
 }
 
@@ -202,17 +202,17 @@ Matrix4 Matrix4::getRotationMatrix() const {
     Vector3 zAxis(m_data[8], m_data[9], m_data[10]);
 
     Matrix4 rotation;
-    rotation.set(0, 0, xAxis.getX());
-    rotation.set(0, 1, xAxis.getY());
-    rotation.set(0, 2, xAxis.getZ());
+    rotation.set(0, 0, xAxis.x);
+    rotation.set(0, 1, xAxis.y);
+    rotation.set(0, 2, xAxis.z);
 
-    rotation.set(1, 0, yAxis.getX());
-    rotation.set(1, 1, yAxis.getY());
-    rotation.set(1, 2, yAxis.getZ());
+    rotation.set(1, 0, yAxis.x);
+    rotation.set(1, 1, yAxis.y);
+    rotation.set(1, 2, yAxis.z);
 
-    rotation.set(2, 0, zAxis.getX());
-    rotation.set(2, 1, zAxis.getY());
-    rotation.set(2, 2, zAxis.getZ());
+    rotation.set(2, 0, zAxis.x);
+    rotation.set(2, 1, zAxis.y);
+    rotation.set(2, 2, zAxis.z);
 
     return rotation;
 }
@@ -228,7 +228,7 @@ Matrix4 Matrix4::translate(float x, float y, float z) {
 }
 
 Matrix4 Matrix4::translate(const Vector3& v) {
-    return Matrix4::translate(v.getX(), v.getY(), v.getZ());
+    return Matrix4::translate(v.x, v.y, v.z);
 }
 
 Matrix4 Matrix4::translate(const Matrix4& mat, float x, float y, float z) {
@@ -237,7 +237,7 @@ Matrix4 Matrix4::translate(const Matrix4& mat, float x, float y, float z) {
 }
 
 Matrix4 Matrix4::translate(const Matrix4& mat, const Vector3& v) {
-    return Matrix4::translate(mat, v.getX(), v.getY(), v.getZ());
+    return Matrix4::translate(mat, v.x, v.y, v.z);
 }
 
 // 创建缩放矩阵
@@ -250,7 +250,7 @@ Matrix4 Matrix4::scale(float x, float y, float z) {
 }
 
 Matrix4 Matrix4::scale(const Vector3& v) {
-    return Matrix4::scale(v.getX(), v.getY(), v.getZ());
+    return Matrix4::scale(v.x, v.y, v.z);
 }
 
 
@@ -295,9 +295,9 @@ Matrix4 Matrix4::rotate(float angle, const Vector3& axis) {
     float cosA = std::cos(angle);
     float sinA = std::sin(angle);
     float oneMinusCosA = 1.0f - cosA;
-    float x = axis.getX();
-    float y = axis.getY();
-    float z = axis.getZ();
+    float x = axis.x;
+    float y = axis.y;
+    float z = axis.z;
     Matrix4 result;
     result.set(0, 0, cosA + oneMinusCosA * x * x);
     result.set(0, 1, oneMinusCosA * x * y - sinA * z);
@@ -314,15 +314,15 @@ Matrix4 Matrix4::rotate(float angle, const Vector3& axis) {
 
 // Matrix4 Matrix4::rotate(const Quaternion& q) {
 //     Matrix4 result;
-//     float xx = q.getX() * q.getX();
-//     float xy = q.getX() * q.getY();
-//     float xz = q.getX() * q.getZ();
-//     float xw = q.getX() * q.getW();
-//     float yy = q.getY() * q.getY();
-//     float yz = q.getY() * q.getZ();
-//     float yw = q.getY() * q.getW();
-//     float zz = q.getZ() * q.getZ();
-//     float zw = q.getZ() * q.getW();
+//     float xx = q.x * q.x;
+//     float xy = q.x * q.y;
+//     float xz = q.x * q.z;
+//     float xw = q.x * q.getW();
+//     float yy = q.y * q.y;
+//     float yz = q.y * q.z;
+//     float yw = q.y * q.getW();
+//     float zz = q.z * q.z;
+//     float zw = q.z * q.getW();
 //     result.set(0, 0, 1.0f - 2.0f * (yy + zz));
 //     result.set(0, 1, 2.0f * (xy - zw));
 //     result.set(0, 2, 2.0f * (xz + yw));
@@ -372,17 +372,17 @@ Matrix4 Matrix4::lookAt(const Vector3& eye, const Vector3& target, const Vector3
     Vector3 xaxis = (up ^ zaxis).normalize();
     Vector3 yaxis = (zaxis ^ xaxis).normalize();
     Matrix4 result;
-    result.set(0, 0, xaxis.getX());
-    result.set(0, 1, yaxis.getX());
-    result.set(0, 2, zaxis.getX());
+    result.set(0, 0, xaxis.x);
+    result.set(0, 1, yaxis.x);
+    result.set(0, 2, zaxis.x);
     result.set(0, 3, 0.0f);
-    result.set(1, 0, xaxis.getY());
-    result.set(1, 1, yaxis.getY());
-    result.set(1, 2, zaxis.getY());
+    result.set(1, 0, xaxis.y);
+    result.set(1, 1, yaxis.y);
+    result.set(1, 2, zaxis.y);
     result.set(1, 3, 0.0f);
-    result.set(2, 0, xaxis.getZ());
-    result.set(2, 1, yaxis.getZ());
-    result.set(2, 2, zaxis.getZ());
+    result.set(2, 0, xaxis.z);
+    result.set(2, 1, yaxis.z);
+    result.set(2, 2, zaxis.z);
     result.set(2, 3, 0.0f);
     result.set(3, 0, -(xaxis * eye));
     result.set(3, 1, -(yaxis * eye));

@@ -39,3 +39,13 @@ Matrix4 OrthographicCamera::getProjectionMatrix() const
 {
     return Matrix4::orthographic(m_left, m_right, m_bottom, m_top, m_near, m_far);
 }
+
+bool OrthographicCamera::isTriangleInFrustum(const Triangle& triangle) const
+{
+    return false;
+}
+
+Triangle OrthographicCamera::getTriangleInFrustum(const Triangle& triangle) const
+{
+    return Triangle();
+}

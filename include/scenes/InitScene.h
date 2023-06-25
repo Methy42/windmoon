@@ -5,14 +5,12 @@
 #include "utils/ServerConnect.h"
 #include "SML/Scene.h"
 
-class InitScene: Scene
+class InitScene: public Scene
 {
 private:
     /* data */
 public:
     InitScene(/* args */);
-
-    int start();
 };
 
 

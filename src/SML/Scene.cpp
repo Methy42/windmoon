@@ -25,6 +25,23 @@ std::vector<Object *> & Scene::getObjects() {
     return m_objects;
 }
 
+void Scene::addLight(Light * light) {
+    m_lights.push_back(light);
+}
+
+void Scene::removeLight(Light * light) {
+    for (size_t i = 0; i < m_lights.size(); ++i) {
+        if (m_lights[i] == light) {
+            m_lights.erase(m_lights.begin() + i);
+            break;
+        }
+    }
+}
+
+std::vector<Light *> Scene::getLights() const {
+    return m_lights;
+}
+
 int Scene::addCamera(Camera * camera) {
     m_cameras.push_back(camera);
 
@@ -62,4 +79,11 @@ Camera * Scene::getCurrentCamera() {
 
 void Scene::setCurrentCamera(int index) {
     m_currentCamera = m_cameras[index];
+}
+
+void Scene::flattenObjectTree(std::vector<Object *> & result_objects, std::vector<Object *> flatten_objects) {
+    for (Object * flatten_object : flatten_objects) {
+        result_objects.push_back(flatten_object);
+        Scene::flattenObjectTree(result_objects, flatten_object->children);
+    }
 }

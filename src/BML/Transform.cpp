@@ -16,9 +16,9 @@ Transform::Transform(const Transform& t) {
 
 // 获取变换矩阵
 Matrix4 Transform::getMatrix() const {
-    Matrix4 mat_scale = Matrix4::scale(m_scale.getX(), m_scale.getY(), m_scale.getZ());
+    Matrix4 mat_scale = Matrix4::scale(m_scale.x, m_scale.y, m_scale.z);
     Matrix4 mat_rotate = m_rotation.getMatrix();
-    Matrix4 mat_trans = Matrix4::translate(m_position.getX(), m_position.getY(), m_position.getZ());
+    Matrix4 mat_trans = Matrix4::translate(m_position.x, m_position.y, m_position.z);
     return mat_trans * mat_rotate * mat_scale;
 }
 
@@ -33,15 +33,15 @@ void Transform::translate(const Vector3& v) {
 
 // 缩放
 void Transform::scale(float x, float y, float z) {
-    m_scale.setX(m_scale.getX() * x);
-    m_scale.setY(m_scale.getY() * y);
-    m_scale.setZ(m_scale.getZ() * z);
+    m_scale.x = m_scale.x * x;
+    m_scale.y = m_scale.y * y;
+    m_scale.z = m_scale.z * z;
 }
 
 void Transform::scale(const Vector3& v) {
-    m_scale.setX(m_scale.getX() * v.getX());
-    m_scale.setY(m_scale.getY() * v.getY());
-    m_scale.setZ(m_scale.getZ() * v.getZ());
+    m_scale.x = m_scale.x * v.x;
+    m_scale.y = m_scale.y * v.y;
+    m_scale.z = m_scale.z * v.z;
 }
 
 // 旋转
@@ -51,7 +51,7 @@ void Transform::rotate(float angle, const Vector3& axis) {
 }
 
 void Transform::rotate(const Vector3& euler_angles) {
-    Quaternion q = Quaternion::fromEulerAngles(euler_angles.getX(), euler_angles.getY(), euler_angles.getZ());
+    Quaternion q = Quaternion::fromEulerAngles(euler_angles.x, euler_angles.y, euler_angles.z);
     m_rotation = q * m_rotation;
 }
 

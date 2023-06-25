@@ -1,33 +1,32 @@
 #include "BML/BoundingBox.h"
 
 BoundingBox::BoundingBox()
-    : m_min(Vector3()), m_max(Vector3()) {}
+    : min(Vector3()), max(Vector3()) {}
 
 BoundingBox::BoundingBox(const Vector3& min, const Vector3& max)
-    : m_min(min), m_max(max) {}
-
-Vector3 BoundingBox::getMin() const {
-    return m_min;
-}
-
-Vector3 BoundingBox::getMax() const {
-    return m_max;
-}
-
-void BoundingBox::setMin(const Vector3& v) {
-    m_min = v;
-}
-
-void BoundingBox::setMax(const Vector3& v) {
-    m_max = v;
-}
+    : min(min), max(max) {}
 
 bool BoundingBox::intersects(const BoundingBox& other) const {
-    if (m_max.getX() < other.getMin().getX() || m_min.getX() > other.getMax().getX())
+    if (max.x < other.min.x || min.x > other.max.x)
         return false;
-    if (m_max.getY() < other.getMin().getY() || m_min.getY() > other.getMax().getY())
+    if (max.y < other.min.y || min.y > other.max.y)
         return false;
-    if (m_max.getZ() < other.getMin().getZ() || m_min.getZ() > other.getMax().getZ())
+    if (max.z < other.min.z || min.z > other.max.z)
         return false;
     return true;
+}
+
+Vector3* BoundingBox::getMinMax(const std::vector<Vector3>& vertices) {
+    Vector3* result = new Vector3[2];
+    result[0] = Vector3(0, 0, 0);
+    result[1] = Vector3(0, 0, 0);
+    for (int i = 0; i < vertices.size(); i++) {
+        result[0].x = std::min(result[0].x, vertices[i].x);
+        result[0].y = std::min(result[0].y, vertices[i].y);
+        result[0].z = std::min(result[0].z, vertices[i].z);
+        result[1].x = std::max(result[1].x, vertices[i].x);
+        result[1].y = std::max(result[1].y, vertices[i].y);
+        result[1].z = std::max(result[1].z, vertices[i].z);
+    }
+    return result;
 }

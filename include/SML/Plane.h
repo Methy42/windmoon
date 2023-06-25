@@ -8,50 +8,36 @@
 #include "BML/Vector2.h"
 #include "BML/Ray.h"
 #include "BML/LineSegment.h"
+#include "BML/BoundingBox.h"
+#include "BML/Triangle.h"
 
 class Plane : public Shape {
 public:
-    // 构造函数
-    Plane(float width, float height);
-    virtual ~Plane() {}
+    Plane(int width = 10, int height = 10, Vector3 normal = {0, 0, 1}, Vector3 position = {0, 0, 0});
+    Plane(Vector3 v1, Vector3 v2, Vector3 v3);
+    ~Plane();
 
-    void set(const Vector3& point, const Vector3& normal);
-    void set(float a, float b, float c, float d);
+    // 实现Shape中的获取顶点坐标方法
+    std::vector<Vector3> getVertices() const override;
 
-    Vector3 getNormal() const;
-    void setNormal(const Vector3& normal);
-    float getDistance() const;
-    void setDistance(float distance);
+    // 实现Shape中的获取三角形面方法
+    std::vector<Triangle> getTriangles() const override;
 
-    virtual void computeVertices() override;
-    virtual void computeNormals() override;
-    virtual void computeTextureCoords() override;
+    // 实现Shape中的获取包围盒方法
+    BoundingBox getBoundingBox() const override;
 
-    // 重载运算符
-    bool operator==(const Plane& plane) const;
-    bool operator!=(const Plane& plane) const;
-
-    // 判断点是否在平面上
-    bool contains(const Vector3& point) const;
-
-    // 计算平面和直线、射线、线段之间的交点
-    Vector3 intersect(const Line& line) const;
-    Vector3 intersect(const Ray& ray) const;
-    Vector3 intersect(const LineSegment& line_segment) const;
-
-    // distanceToPoint() 函数返回点到平面的距离
-    float distanceToPoint(const Vector3& point) const;
-
-    // normalize() 函数将平面法线归一化
+    // 归一化平面法向量
     void normalize();
 
+    // 获取平面法向量
+    Vector3 getNormal() const;
+
+    // distanceToPoint方法返回点到平面的距离
+    double distanceToPoint(Vector3 point) const;
+
 private:
-    float m_width;
-    float m_height;
-    Vector3 m_vertices[4]; // 平面的四个顶点
-    Vector3 m_normal;  // 平面法线
-    float m_distance;  // 平面到原点的距离
-    Vector2 m_texcoords[4]; // 平面的纹理坐标
+    int m_width, m_height;
+    Vector3 m_normal, m_position;
 };
 
 #endif  // SML_PLANE_H

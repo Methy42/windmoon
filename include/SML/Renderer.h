@@ -7,13 +7,14 @@
 #include "BML/Color.h"
 #include "SML/Object.h"
 #include "SML/Scene.h"
+#include "SML/Composite.h"
 
 class Renderer {
 public:
     Renderer();
     virtual ~Renderer();
 
-    void render(Scene * scene, unsigned char * pixels, int width, int height);
+    virtual void RendererRender(Scene * scene, int width, int height, ...) const = 0;
 
 private:
     Camera * m_currentCamera;

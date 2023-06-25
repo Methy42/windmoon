@@ -13,6 +13,8 @@ public:
     Vector4(const Vector4& v);
     Vector4(const Vector3& v, float w);
 
+    float x, y, z, w;
+
     // 向量加法
     Vector4 operator+(const Vector4& v) const;
 
@@ -42,17 +44,7 @@ public:
     // lengthSquared 函数 用于计算向量长度的平方
     float lengthSquared() const;
 
-    // 获取向量的x, y, z, w分量
-    float getX() const;
-    float getY() const;
-    float getZ() const;
-    float getW() const;
-
     // 设置向量的x, y, z, w分量
-    void setX(float x);
-    void setY(float y);
-    void setZ(float z);
-    void setW(float w);
     void set(float x, float y, float z, float w);
 
     static const Vector4 ZERO; // 静态常量 ZERO
@@ -60,8 +52,6 @@ public:
     static const Vector4 UNIT_Y;  // 静态常量 UNIT_Y
     static const Vector4 UNIT_X;  // 静态常量 UNIT_X
     static const Vector4 UNIT_W;  // 静态常量 UNIT_W
-private:
-    float x, y, z, w;
 };
 
 #endif  // BML_VECTOR4_H

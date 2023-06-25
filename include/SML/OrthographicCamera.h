@@ -19,6 +19,12 @@ public:
     // 计算投影矩阵
     Matrix4 getProjectionMatrix() const override;
 
+    // 判断三角形是否在相机视锥体内
+    bool isTriangleInFrustum(const Triangle& triangle) const override;
+
+    // 获取三角形在相机视锥体内的投影
+    Triangle getTriangleInFrustum(const Triangle& triangle) const override;
+
 private:
     float m_left;    // 左裁剪面
     float m_right;   // 右裁剪面

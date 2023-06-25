@@ -189,6 +189,13 @@ Color& Color::operator+=(const Color& other) {
     return *this;
 }
 
+Color& Color::operator+=(const Vector3& v) {
+    m_r += v.x;
+    m_g += v.y;
+    m_b += v.z;
+    return *this;
+}
+
 Color Color::operator-(const Color& other) const {
     return Color(m_r - other.m_r, m_g - other.m_g, m_b - other.m_b, m_a - other.m_a);
 }
@@ -229,7 +236,23 @@ bool Color::operator!=(const Color& other) const {
     return !(*this == other);
 }
 
+std::string Color::toString() const {
+    return "Color(" + std::to_string(m_r) + ", " + std::to_string(m_g) + ", " + std::to_string(m_b) + ", " + std::to_string(m_a) + ")";
+}
+
 Color Color::lerp(const Color& c1, const Color& c2, float t) {
     // 线性插值颜色c1和c2，系数为t
+    return c1 * (1.0f - t) + c2 * t;
+}
+
+Color Color::clamp() const {
+    return {std::clamp(m_r, 0.0f, 255.0f),
+            std::clamp(m_g, 0.0f, 255.0f),
+            std::clamp(m_b, 0.0f, 255.0f),
+            std::clamp(m_a, 0.0f, 255.0f)};
+}
+
+Color Color::blend(const Color& c1, const Color& c2, float t) {
+    // 混合颜色c1和c2，系数为t
     return c1 * (1.0f - t) + c2 * t;
 }

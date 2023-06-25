@@ -5,6 +5,8 @@
 
 class Vector3 {
 public:
+    float x, y, z;
+
     // 构造函数
     Vector3();
     Vector3(float x, float y, float z);
@@ -28,6 +30,8 @@ public:
     Vector3 operator^(const Vector3& v) const;
     // 就地加法操作
     Vector3& operator+=(const Vector3& v);
+    // 就地减法操作
+    Vector3& operator-=(const Vector3& v);
     // 比较两个向量是否相等
     bool operator==(const Vector3& v) const;
 
@@ -42,15 +46,7 @@ public:
     // lengthSquared 函数 用于计算向量长度的平方
     float lengthSquared() const;
 
-    // 获取向量的x, y, z分量
-    float getX() const;
-    float getY() const;
-    float getZ() const;
-
     // 设置向量的x, y, z分量
-    void setX(float x);
-    void setY(float y);
-    void setZ(float z);
     void set(float x, float y, float z);
 
     static const Vector3 ZERO; // 静态常量 ZERO
@@ -58,9 +54,6 @@ public:
     static const Vector3 UNIT_Y;  // 静态常量 UNIT_Y
     static const Vector3 UNIT_X;  // 静态常量 UNIT_X
     static const Vector3 UNIT_SCALE;  // 静态常量 UNIT_SCALE
-
-private:
-    float m_x, m_y, m_z;
 };
 
 #endif // BML_VECTOR3_H

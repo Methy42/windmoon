@@ -4,6 +4,7 @@
 #include "BML/Vector3.h"   // 三维向量类
 #include "BML/Vector4.h"   // 四维向量类
 #include "BML/Matrix4.h"   // 4x4矩阵类
+#include "BML/Triangle.h"       // 射线类
 
 class Camera {
 public:
@@ -14,6 +15,7 @@ public:
     Vector3 getPosition() const { return m_position; }
     Vector3 getDirection() const { return m_direction; }
     Vector3 getUp() const { return m_up; }
+    Vector3 getRight() const { return m_direction ^ m_up; }
 
     // 设置相机的位置、朝向和上方向
     void setPosition(const Vector3& position);
@@ -25,6 +27,12 @@ public:
 
     // 计算投影矩阵
     virtual Matrix4 getProjectionMatrix() const = 0;
+
+    // 判断三角形是否在相机视锥体内
+    virtual bool isTriangleInFrustum(const Triangle& triangle) const = 0;
+
+    // 获取三角形在相机视锥体内的投影
+    virtual Triangle getTriangleInFrustum(const Triangle& triangle) const = 0;
 
 protected:
     Vector3 m_position;     // 相机位置
