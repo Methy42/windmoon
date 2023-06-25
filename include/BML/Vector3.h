@@ -2,6 +2,8 @@
 #define BML_VECTOR3_H
 
 #include <cmath>
+#include <string>
+#include <sstream>
 
 class Vector3 {
 public:
@@ -49,11 +51,14 @@ public:
     // 设置向量的x, y, z分量
     void set(float x, float y, float z);
 
+    std::string toString() const;
+
     static const Vector3 ZERO; // 静态常量 ZERO
     static const Vector3 UNIT_Z;  // 静态常量 UNIT_Z
     static const Vector3 UNIT_Y;  // 静态常量 UNIT_Y
     static const Vector3 UNIT_X;  // 静态常量 UNIT_X
     static const Vector3 UNIT_SCALE;  // 静态常量 UNIT_SCALE
+    static const Vector3 RIGHT;  // 静态常量 RIGHT
 };
 
 #endif // BML_VECTOR3_H

@@ -5,6 +5,7 @@ const Vector3 Vector3::UNIT_X(1.0f, 0.0f, 0.0f);
 const Vector3 Vector3::UNIT_Y(0.0f, 1.0f, 0.0f);
 const Vector3 Vector3::UNIT_Z(0.0f, 0.0f, 1.0f);
 const Vector3 Vector3::UNIT_SCALE(1.0f, 1.0f, 1.0f);
+const Vector3 Vector3::RIGHT(1.0f, 0.0f, 0.0f);
 
 // 构造函数
 Vector3::Vector3(): x(0), y(0), z(0) {}
@@ -102,4 +103,10 @@ void Vector3::set(float x, float y, float z) {
     x = x;
     y = y;
     z = z;
+}
+
+std::string Vector3::toString() const {
+    std::stringstream ss;
+    ss << "(" << x << ", " << y << ", " << z << ")";
+    return ss.str();
 }

@@ -110,21 +110,21 @@ Vector3 PerspectiveCamera::projectOnPlanes(const Vector3& point) const {
     return projected_point;
 }
 
-Triangle PerspectiveCamera::getTriangleInFrustum(const Triangle& triangle) const
+Triangle PerspectiveCamera::getTriangleInFrustum(Triangle* triangle) const
 {
     Matrix4 projection_matrix = getProjectionMatrix();
 
     // 将三角形顶点逐个投影到相机投影平面上
-    Vector3 v0 = projectOnPlanes(triangle.v1);
-    Vector3 v1 = projectOnPlanes(triangle.v2);
-    Vector3 v2 = projectOnPlanes(triangle.v3);
+    Vector3 v0 = projectOnPlanes(triangle->v1);
+    Vector3 v1 = projectOnPlanes(triangle->v2);
+    Vector3 v2 = projectOnPlanes(triangle->v3);
 
     // 将三角形的投影转换为 NDC 坐标系下的坐标
     v0 = projection_matrix * v0;
     v1 = projection_matrix * v1;
     v2 = projection_matrix * v2;
 
-    return Triangle(v0, v1, v2, triangle.tv1, triangle.tv2, triangle.tv3);
+    return Triangle(v0, v1, v2, triangle->tv1, triangle->tv2, triangle->tv3);
 }
 
 // Path: src/SML/OrthographicCamera.cpp

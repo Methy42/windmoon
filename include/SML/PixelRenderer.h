@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cmath>
+#include <iostream>
 #include "SML/Camera.h"
 #include "BML/Color.h"
 #include "BML/Triangle.h"
@@ -23,7 +24,7 @@ public:
     ~PixelRenderer();
 
     // getPhongShading 获取Phong光照模型的颜色
-    Color getPhongShading(const Vector3& point, const Vector3& normal, const Vector3& view, const Material& material, const Scene& scene) const;
+    Color getPhongShading(const Vector3& point, const Vector3& normal, const Vector3& view, Material* material, const Scene& scene) const;
 
     /**
      * @brief 渲染场景

@@ -7,11 +7,13 @@ void Camera::setPosition(const Vector3& position) {
 }
 
 void Camera::setDirection(const Vector3& direction) {
-    m_direction = direction;
+    m_direction = direction.normalize();
+    m_up = ((m_direction ^ m_up) ^ m_direction);
 }
 
 void Camera::setUp(const Vector3& up) {
-    m_up = up;
+    m_up = up.normalize();
+    m_direction = ((m_up ^ m_direction) ^ m_up);
 }
 
 Matrix4 Camera::getViewMatrix() const

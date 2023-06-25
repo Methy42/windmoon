@@ -3,7 +3,7 @@
 // 构造函数
 Object::Object()
 {
-    m_transform = nullptr;
+    m_transform = new Transform();
     m_material = nullptr;
     m_shape = nullptr;
 }
@@ -62,14 +62,14 @@ void Object::setTransform(const Transform& transform)
     *m_transform = transform;
 }
 
-void Object::setMaterial(const Material& material)
+void Object::setMaterial(Material* material)
 {
-    *m_material = material;
+    m_material = material;
 }
 
-void Object::setShape(const Shape& shape)
+void Object::setShape(Shape* shape)
 {
-    *m_shape = shape;
+    m_shape = shape;
 }
 
 // 获取物体的变换矩阵

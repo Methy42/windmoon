@@ -2,6 +2,7 @@
 #define SML_PLANE_H
 
 #include <cmath>
+#include <iostream>
 #include "BML/Shape.h"
 #include "BML/Vector3.h"
 #include "BML/Line.h"
@@ -13,7 +14,7 @@
 
 class Plane : public Shape {
 public:
-    Plane(int width = 10, int height = 10, Vector3 normal = {0, 0, 1}, Vector3 position = {0, 0, 0});
+    Plane(int width = 10, int height = 10, Vector3 normal = {0, 0, 1}, Vector3 up = {0, 1, 0}, Vector3 position = {0, 0, 0});
     Plane(Vector3 v1, Vector3 v2, Vector3 v3);
     ~Plane();
 
@@ -37,7 +38,7 @@ public:
 
 private:
     int m_width, m_height;
-    Vector3 m_normal, m_position;
+    Vector3 m_normal, m_up, m_position;
 };
 
 #endif  // SML_PLANE_H

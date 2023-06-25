@@ -246,10 +246,10 @@ Color Color::lerp(const Color& c1, const Color& c2, float t) {
 }
 
 Color Color::clamp() const {
-    return {std::clamp(m_r, 0.0f, 255.0f),
-            std::clamp(m_g, 0.0f, 255.0f),
-            std::clamp(m_b, 0.0f, 255.0f),
-            std::clamp(m_a, 0.0f, 255.0f)};
+    return {m_r < 0.0f ? 0.0f : (m_r > 255.0f ? 255.0f : m_r),
+            m_g < 0.0f ? 0.0f : (m_g > 255.0f ? 255.0f : m_g),
+            m_b < 0.0f ? 0.0f : (m_b > 255.0f ? 255.0f : m_b),
+            m_a < 0.0f ? 0.0f : (m_a > 255.0f ? 255.0f : m_a)};
 }
 
 Color Color::blend(const Color& c1, const Color& c2, float t) {

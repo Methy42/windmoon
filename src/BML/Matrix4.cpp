@@ -400,3 +400,14 @@ Matrix4 Matrix4::identity() {
     result.set(3, 3, 1.0f);
     return result;
 }
+
+// toString 函数 用于将矩阵转换为字符串
+std::string Matrix4::toString() const {
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(2);
+    ss << "[" << m_data[0] << ", " << m_data[4] << ", " << m_data[8] << ", " << m_data[12] << "]" << std::endl;
+    ss << "[" << m_data[1] << ", " << m_data[5] << ", " << m_data[9] << ", " << m_data[13] << "]" << std::endl;
+    ss << "[" << m_data[2] << ", " << m_data[6] << ", " << m_data[10] << ", " << m_data[14] << "]" << std::endl;
+    ss << "[" << m_data[3] << ", " << m_data[7] << ", " << m_data[11] << ", " << m_data[15] << "]" << std::endl;
+    return ss.str();
+}

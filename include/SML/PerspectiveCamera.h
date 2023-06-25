@@ -29,7 +29,7 @@ public:
     Vector3 projectOnPlanes(const Vector3& point) const;
 
     // 获取三角形在相机视锥体内的投影
-    Triangle getTriangleInFrustum(const Triangle& triangle) const override;
+    Triangle getTriangleInFrustum(Triangle* triangle) const override;
 
 private:
     // 视锥体的六个面

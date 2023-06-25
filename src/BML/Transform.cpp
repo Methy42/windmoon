@@ -16,9 +16,15 @@ Transform::Transform(const Transform& t) {
 
 // 获取变换矩阵
 Matrix4 Transform::getMatrix() const {
-    Matrix4 mat_scale = Matrix4::scale(m_scale.x, m_scale.y, m_scale.z);
-    Matrix4 mat_rotate = m_rotation.getMatrix();
-    Matrix4 mat_trans = Matrix4::translate(m_position.x, m_position.y, m_position.z);
+    Matrix4 mat_scale = m_scale == Vector3(1, 1, 1) ? Matrix4::identity() : Matrix4::scale(m_scale.x, m_scale.y, m_scale.z);
+    Matrix4 mat_rotate = m_rotation == Quaternion() ? Matrix4::identity() : m_rotation.getMatrix();
+    Matrix4 mat_trans = m_position == Vector3() ? Matrix4::identity() : Matrix4::translate(m_position.x, m_position.y, m_position.z);
+    std::cout << "m_position: (" << m_position.x << ", " << m_position.y << ", " << m_position.z << ")" << std::endl;
+    std::cout << "m_scale: (" << m_scale.x << ", " << m_scale.y << ", " << m_scale.z << ")" << std::endl;
+    std::cout << "m_rotation: (" << m_rotation.w << ", " << m_rotation.x << ", " << m_rotation.y << ", " << m_rotation.z << ")" << std::endl;
+    std::cout << "mat_scale: " << mat_scale.toString() << std::endl;
+    std::cout << "mat_rotate: " << mat_rotate.toString() << std::endl;
+    std::cout << "mat_trans: " << mat_trans.toString() << std::endl;
     return mat_trans * mat_rotate * mat_scale;
 }
 

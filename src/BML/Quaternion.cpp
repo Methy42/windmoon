@@ -58,6 +58,11 @@ Quaternion Quaternion::operator/(float c) const {
     return Quaternion(w / c, x / c, y / c, z / c);
 }
 
+// 判断四元数相等
+bool Quaternion::operator==(const Quaternion& q) const {
+    return w == q.w && x == q.x && y == q.y && z == q.z;
+}
+
 void set(float w, float x, float y, float z) {
     w = w;
     x = x;

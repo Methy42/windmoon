@@ -32,7 +32,7 @@ public:
     virtual bool isTriangleInFrustum(const Triangle& triangle) const = 0;
 
     // 获取三角形在相机视锥体内的投影
-    virtual Triangle getTriangleInFrustum(const Triangle& triangle) const = 0;
+    virtual Triangle getTriangleInFrustum(Triangle* triangle) const = 0;
 
 protected:
     Vector3 m_position;     // 相机位置

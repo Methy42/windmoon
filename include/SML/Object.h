@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <iostream>
 #include "BML/Transform.h" // 变换类
 #include "BML/Shape.h"     // 形状类
 #include "BML/Material.h"  // 材质类
@@ -32,8 +33,8 @@ public:
     // 设置物体的位置、缩放和旋转信息
     void setParent(Object* parent);
     void setTransform(const Transform& position);
-    void setMaterial(const Material& scale);
-    void setShape(const Shape& rotation);
+    void setMaterial(Material* scale);
+    void setShape(Shape* shape);
 
     // 获取物体的变换矩阵
     Matrix4 getTransformMatrix() const;

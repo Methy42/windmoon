@@ -23,7 +23,7 @@ public:
     bool isTriangleInFrustum(const Triangle& triangle) const override;
 
     // 获取三角形在相机视锥体内的投影
-    Triangle getTriangleInFrustum(const Triangle& triangle) const override;
+    Triangle getTriangleInFrustum(Triangle* triangle) const override;
 
 private:
     float m_left;    // 左裁剪面

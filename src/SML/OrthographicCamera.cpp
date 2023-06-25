@@ -45,7 +45,7 @@ bool OrthographicCamera::isTriangleInFrustum(const Triangle& triangle) const
     return false;
 }
 
-Triangle OrthographicCamera::getTriangleInFrustum(const Triangle& triangle) const
+Triangle OrthographicCamera::getTriangleInFrustum(Triangle* triangle) const
 {
     return Triangle();
 }

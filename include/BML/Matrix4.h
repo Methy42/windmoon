@@ -2,6 +2,9 @@
 #define BML_MATRIX4_H
 
 #include <cmath>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
 #include "BML/Vector3.h"
 #include "BML/Vector4.h"
 
@@ -77,6 +80,8 @@ public:
     static Matrix4 lookAt(const Vector3& eye, const Vector3& target, const Vector3& up);
     // identity 函数 用于创建单位矩阵
     static Matrix4 identity();
+    // toString 函数 用于将矩阵转换为字符串
+    std::string toString() const;
 
 private:
     float m_data[16];

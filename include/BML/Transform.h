@@ -1,6 +1,7 @@
 #ifndef BML_TRANSFORM_H
 #define BML_TRANSFORM_H
 
+#include <iostream>
 #include "BML/Vector3.h"
 #include "BML/Matrix4.h"
 #include "BML/Quaternion.h"

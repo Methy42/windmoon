@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <unistd.h>
 #include "BML/Color.h"
 #include "SML/PixelRenderer.h"
@@ -14,13 +15,22 @@ int main () {
     for (int i = 0; i < 100; i++) {
         pixelMatrix[i] = new Color[100];
     }
+
     renderer->RendererRender(initScene, 100, 100, pixelMatrix);
+    std::ofstream outFile("./test.txt");
+    if (!outFile.is_open()) {
+        std::cout << "Error: failed to open file." << std::endl;
+        return 0;
+    }
 
     for (int i = 0; i < 100; i++) {
         for (int j = 0; j < 100; ++j) {
-            std::cout << pixelMatrix[i][j].toString() << std::endl;
+            outFile << pixelMatrix[i][j].toString() << ", ";
         }
+        outFile << std::endl;
     }
+
+    outFile.close();
 
     for (int i = 0; i < 100; i++) {
         delete[] pixelMatrix[i];

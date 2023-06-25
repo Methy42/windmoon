@@ -27,6 +27,8 @@ public:
     Quaternion operator*(float c) const;
     // 四元数标量除法
     Quaternion operator/(float c) const;
+    // 判断四元数相等
+    bool operator==(const Quaternion& q) const;
 
     void set(float w, float x, float y, float z);
 
